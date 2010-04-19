@@ -1,0 +1,12 @@
+Source: flam3
+Section: graphics
+Priority: optional
+Maintainer: Spotworks LLC <ubuntu@spotworks.com>
+Build-Depends: debhelper (>= 5), automake, autotools-dev, libjpeg62-dev, libpng12-dev, libxml2-dev, libtool, subversion
+Standards-Version: 3.7.2
+Homepage: http://www.flam3.com
+
+Package: flam3
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: render and animate FLAM3s and manipulate their genomes

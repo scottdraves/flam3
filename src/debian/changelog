@@ -1,0 +1,48 @@
+flam3 (2.7.18-0ubuntu1~ppa0) hardy; urgency=low
+
+  * Bug fixes from upstream.
+
+ -- Spotworks LLC <ubuntu@spotworks.com>  Tue, 17 Mar 2009 20:52:50 -0600
+
+flam3 (2.7.17-0ubuntu1~ppa0) hardy; urgency=low
+
+  * Bug fixes from upstream.
+
+ -- Spotworks LLC <ubuntu@spotworks.com>  Wed, 12 Nov 2008 19:07:18 -0500
+
+flam3 (2.7.16-0ubuntu1~ppa2) hardy; urgency=low
+
+  * Fixed version number for 2.7.16.
+
+ -- Spotworks LLC <ubuntu@spotworks.com>  Sat, 06 Sep 2008 08:05:17 -0600
+
+flam3 (2.7.16-0ubuntu1~ppa0) hardy; urgency=low
+
+  * More bugs fixed and features from upstream, again interpolation related.
+
+ -- Spotworks LLC <ubuntu@spotworks.com>  Sat, 06 Sep 2008 07:27:23 -0600
+
+flam3 (2.7.15-0ubuntu1~ppa0) hardy; urgency=low
+
+  * Many bugs fixed and features from upstream, mostly about interpolation.
+
+ -- Spotworks LLC <ubuntu@spotworks.com>  Thu, 28 Aug 2008 00:28:37 -0400
+
+flam3 (2.7.14-0ubuntu1~ppa0) hardy; urgency=low
+
+  * Many bugs fixed and features from upstream.
+
+ -- Spotworks LLC <ubuntu@spotworks.com>  Mon, 21 Jul 2008 18:23:45 -0400
+
+flam3 (2.7.13-0ubuntu1~ppa8) hardy; urgency=low
+
+  * Attempt to fix erroneous O2 compile flag.
+
+ -- Spotworks LLC <ubuntu@spotworks.com>  Fri, 27 Jun 2008 11:23:02 -0600
+
+flam3 (2.7.13-0ubuntu1~ppa2) hardy; urgency=low
+
+  * Initial package release.
+
+ -- Spotworks LLC <ubuntu@spotworks.com>  Thu, 12 Jun 2008 17:16:17 -0600
+
