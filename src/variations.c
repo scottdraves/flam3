@@ -1982,7 +1982,7 @@ void xform_precalc(flam3_genome *cp, int xi) {
    wedgeJulia_precalc(&(cp->xform[xi]));   
 }   
 
-int prepare_xform_fn_ptrs(flam3_genome *cp, randctx *rc) {
+int prepare_precalc_flags(flam3_genome *cp) {
 
    double d;
    int i,j,totnum;

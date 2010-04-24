@@ -309,7 +309,7 @@ int flam3_xform_preview(flam3_genome *cp, int xi, double range, int numvals, int
    cp->xform[xi].density = 1.0;
    
    /* Prepare the function pointers */
-   if (prepare_xform_fn_ptrs(cp,rc)) {
+   if (prepare_precalc_flags(cp)) {
       cp->xform[xi].density = oldweight;
       return(1);
    }
@@ -369,7 +369,7 @@ int flam3_colorhist(flam3_genome *cp, int num_batches, double *hist) {
     sub_batch[3] = 0;
 
     // get into the attractor
-    if (prepare_xform_fn_ptrs(cp,&rc))
+    if (prepare_precalc_flags(cp))
        return(1);
       
     xform_distrib = flam3_create_xform_distrib(cp);
@@ -3419,7 +3419,7 @@ int flam3_estimate_bounding_box(flam3_genome *cp, double eps, int nsamples,
    points[2] = 0.0;
    points[3] = 0.0;
 
-   if (prepare_xform_fn_ptrs(cp,rc))
+   if (prepare_precalc_flags(cp))
       return(-1);
    xform_distrib = flam3_create_xform_distrib(cp);
    if (xform_distrib==NULL)
@@ -3834,7 +3834,7 @@ double flam3_dimension(flam3_genome *cp, int ntries, int clip_to_camera) {
     subb[1] = flam3_random_isaac_11(&rc);
     subb[2] = 0.0;
     subb[3] = 0.0;
-    if (prepare_xform_fn_ptrs(cp,&rc))
+    if (prepare_precalc_flags(cp))
       return(-1.0);
     xform_distrib = flam3_create_xform_distrib(cp);
     if (xform_distrib==NULL)
@@ -3929,7 +3929,7 @@ double flam3_lyapunov(flam3_genome *cp, int ntries) {
     p[3] = 0.0;
 
     // get into the attractor
-    if (prepare_xform_fn_ptrs(cp,&rc))
+    if (prepare_precalc_flags(cp))
       return(-1.0);
     xform_distrib = flam3_create_xform_distrib(cp);
     if (xform_distrib==NULL)
@@ -3944,7 +3944,7 @@ double flam3_lyapunov(flam3_genome *cp, int ntries) {
     // take one deterministic step
     srandom(i);
 
-    if (prepare_xform_fn_ptrs(cp,&rc))
+    if (prepare_precalc_flags(cp))
       return(-1.0);
     xform_distrib = flam3_create_xform_distrib(cp);
     if (xform_distrib==NULL)
@@ -3973,7 +3973,7 @@ double flam3_lyapunov(flam3_genome *cp, int ntries) {
 
     // take the same step but with eps
     srandom(i);
-    if (prepare_xform_fn_ptrs(cp,&rc))
+    if (prepare_precalc_flags(cp))
       return(-1.0);
     xform_distrib = flam3_create_xform_distrib(cp);
     if (xform_distrib==NULL)

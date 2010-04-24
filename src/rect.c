@@ -746,7 +746,7 @@ static int render_rectangle(flam3_frame *spec, void *out,
          flam3_interpolate(spec->genomes, spec->ngenomes, temporal_sample_time, 0, &cp);
 
          /* Get the xforms ready to render */
-         if (prepare_xform_fn_ptrs(&cp, &spec->rc)) {
+         if (prepare_precalc_flags(&cp)) {
             fprintf(stderr,"prepare xform pointers returned error: aborting.\n");
             return(1);
          }

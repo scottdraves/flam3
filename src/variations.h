@@ -133,7 +133,7 @@ void supershape_precalc(flam3_xform *xf);
 void wedgeJulia_precalc(flam3_xform *xf);
 
 void xform_precalc(flam3_genome *cp, int xi);
-int prepare_xform_fn_ptrs(flam3_genome *, randctx *);
+int prepare_precalc_flags(flam3_genome *);
 
 int apply_xform(flam3_genome *cp, int fn, double *p, double *q, randctx *rc);
 void initialize_xforms(flam3_genome *thiscp, int start_here);
