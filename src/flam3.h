@@ -570,7 +570,7 @@ flam3_genome *flam3_parse_from_file(FILE *f, char *fn, int default_flag, int *nc
 void flam3_add_symmetry(flam3_genome *g, int sym);
 
 void flam3_improve_colors(flam3_genome *g, int ntries, int change_palette, int color_resolution);
-EXPORT int flam3_colorhist(flam3_genome *cp, int num_batches, double *hist);
+EXPORT int flam3_colorhist(flam3_genome *cp, int num_batches, randctx *rc, double *hist);
 EXPORT int flam3_estimate_bounding_box(flam3_genome *g, double eps, int nsamples,
              double *bmin, double *bmax, randctx *rc);
 void flam3_rotate(flam3_genome *g, double angle, int interp_type); /* angle in degrees */

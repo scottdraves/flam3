@@ -343,41 +343,34 @@ int flam3_xform_preview(flam3_genome *cp, int xi, double range, int numvals, int
    return(0);
 }         
 
-int flam3_colorhist(flam3_genome *cp, int num_batches, double *hist) {
+int flam3_colorhist(flam3_genome *cp, int num_batches, randctx *rc, double *hist) {
 
   int lp,plp;
   int mycolor;
   long int default_isaac_seed = (long int)time(0);
-  randctx rc;
   unsigned short *xform_distrib;
   int sbs = 10000;
   double sub_batch[4*10000];
 
-  /* Set up the isaac rng */
-  for (lp = 0; lp < RANDSIZ; lp++)
-     rc.randrsl[lp] = default_isaac_seed;
-
-  irandinit(&rc,1);
-  
   memset(hist,0,256*sizeof(double));
   
+  // get into the attractor
+  if (prepare_precalc_flags(cp))
+     return(1);
+      
+  xform_distrib = flam3_create_xform_distrib(cp);
+
   for (lp=0;lp<num_batches;lp++) {
   
-    sub_batch[0] = flam3_random_isaac_11(&rc);
-    sub_batch[1] = flam3_random_isaac_11(&rc);
+    sub_batch[0] = flam3_random_isaac_11(rc);
+    sub_batch[1] = flam3_random_isaac_11(rc);
     sub_batch[2] = 0;
     sub_batch[3] = 0;
 
-    // get into the attractor
-    if (prepare_precalc_flags(cp))
-       return(1);
-      
-    xform_distrib = flam3_create_xform_distrib(cp);
     
     if (xform_distrib==NULL)
        return(1);
-    flam3_iterate(cp, sbs, 20, sub_batch, xform_distrib, &rc);
-    free(xform_distrib);
+    flam3_iterate(cp, sbs, 20, sub_batch, xform_distrib, rc);
     
     // histogram the colors in the sub_batch array
     for (plp=0;plp<4*sbs;plp+=4) {
@@ -389,6 +382,7 @@ int flam3_colorhist(flam3_genome *cp, int num_batches, double *hist) {
     }
   }
   
+  free(xform_distrib);
   for (plp=0;plp<256;plp++)
     hist[plp] /= (float)(num_batches*sbs);
     
