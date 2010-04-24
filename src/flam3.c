@@ -347,7 +347,6 @@ int flam3_colorhist(flam3_genome *cp, int num_batches, randctx *rc, double *hist
 
   int lp,plp;
   int mycolor;
-  long int default_isaac_seed = (long int)time(0);
   unsigned short *xform_distrib;
   int sbs = 10000;
   double sub_batch[4*10000];
