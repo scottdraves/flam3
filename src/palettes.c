@@ -393,6 +393,7 @@ static double try_colors(flam3_genome *g, int color_resolution) {
     f.pixel_aspect_ratio = 1.0;
     f.progress = 0;
     f.nthreads = 1;
+    f.sub_batch_size = 10000;
         
     image = (unsigned char *) calloc(g->width * g->height, 3);
     if (flam3_render(&f, image, flam3_field_both, 3, 0, &stats)) {
