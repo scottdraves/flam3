@@ -288,7 +288,7 @@ void flam3_calc_newrgb(double *cbuf, double ls, double highpow, double *newrgb) 
    double a, maxa=-1.0, maxc=0;
    double adjhlp;
    
-   if (ls==0.0) {
+   if (ls==0.0 || (cbuf[0]==0.0 && cbuf[1]==0.0 && cbuf[2]==0.0)) {
       newrgb[0] = 0.0;
       newrgb[1] = 0.0;
       newrgb[2] = 0.0;
@@ -303,7 +303,7 @@ void flam3_calc_newrgb(double *cbuf, double ls, double highpow, double *newrgb) 
          maxc = cbuf[rgbi]/PREFILTER_WHITE;
       }
    }
-   
+      
    /* If a channel is saturated and we have a non-negative highlight power */
    /* modify the color to prevent hue shift                                */
    if (maxa>255 && highpow>=0.0) {
