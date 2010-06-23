@@ -577,6 +577,7 @@ void flam3_interpolate_n(flam3_genome *result, int ncp,
       INTERP(xform[i].auger_weight);
       INTERP(xform[i].auger_freq);
       INTERP(xform[i].auger_scale);
+      INTERP(xform[i].flux_spread);
 
       for (j = 0; j < flam3_nvariations; j++)
          INTERP(xform[i].var[j]);

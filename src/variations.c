@@ -130,6 +130,7 @@ char *flam3_variation_names[1+flam3_nvariations] = {
   "csch",
   "coth",
   "auger",
+  "flux",
   0
 };
 
@@ -1906,6 +1907,21 @@ void var96_auger (flam3_iter_helper *f, double weight) {
     f->p1 += weight * dy;
 }
 
+void var97_flux (flam3_iter_helper *f, double weight) {
+
+    // Flux, by meckie
+    double xpw = f->tx + weight;
+    double xmw = f->tx - weight;
+    double avgr = weight * (2 + f->xform->flux_spread) * sqrt( sqrt(f->ty*f->ty + xpw*xpw) / sqrt(f->ty*f->ty + xmw*xmw));
+    double avga = ( atan2(f->ty, xmw) - atan2(f->ty,xpw) ) * 0.5;
+
+    double s = sin(avga);
+    double c = cos(avga);
+
+    f->p0 += avgr * cos(avga);
+    f->p1 += avgr * sin(avga);
+}
+
 /* Precalc functions */
 
 void perspective_precalc(flam3_xform *xf) {
@@ -2104,13 +2120,9 @@ int apply_xform(flam3_genome *cp, int fn, double *p, double *q, randctx *rc)
 
    f.rc = rc;
 
-//   s = 1.0-2.0*cp->xform[fn].color_speed;
-//   s1 = 0.5 - 0.5 * s;
    s1 = cp->xform[fn].color_speed;
-   s = 1.0 - 2.0*s1;
 
-   next_color = (p[2] + cp->xform[fn].color) * s1 + s * p[2];
-   q[2] = next_color;
+   q[2] = s1 * cp->xform[fn].color + (1.0-s1) * p[2];
    q[3] = cp->xform[fn].vis_adjusted;
 
    //fprintf(stderr,"%d : %f %f %f\n",fn,cp->xform[fn].c[0][0],cp->xform[fn].c[1][0],cp->xform[fn].c[2][0]);
@@ -2345,6 +2357,8 @@ int apply_xform(flam3_genome *cp, int fn, double *p, double *q, randctx *rc)
                 var95_coth(&f, weight); break;
          case (VAR_AUGER):
                 var96_auger(&f, weight); break;
+         case (VAR_FLUX):
+                var97_flux(&f, weight); break;
       }
 
    }
@@ -2486,6 +2500,8 @@ void initialize_xforms(flam3_genome *thiscp, int start_here) {
       thiscp->xform[i].auger_weight = 0.5;
       thiscp->xform[i].auger_sym = 0.0;
       thiscp->xform[i].auger_scale = 1.0;     
+
+      thiscp->xform[i].flux_spread = 0.0;
        
       thiscp->xform[i].julian_power = 1.0;
       thiscp->xform[i].julian_dist = 1.0;

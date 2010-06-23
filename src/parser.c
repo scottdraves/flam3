@@ -1211,6 +1211,8 @@ int parse_xform_xml(xmlNode *chld_node,flam3_xform *this_xform, int *num_xaos,
          this_xform->auger_sym = flam3_atof(att_str);
       } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"auger_scale")) {
          this_xform->auger_scale = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"flux_spread")) {
+         this_xform->flux_spread = flam3_atof(att_str);
       } else {
          int v = var2n((char *) cur_att->name);
          if (v != flam3_variation_none)

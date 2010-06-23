@@ -673,6 +673,7 @@ void apply_motion_parameters(flam3_xform *xf, flam3_xform *addto, double blend) 
       APPMOT(auger_weight);
       APPMOT(auger_freq);
       APPMOT(auger_scale);
+      APPMOT(flux_spread);
 
       for (j = 0; j < flam3_nvariations; j++)
          APPMOT(var[j]);
@@ -961,6 +962,9 @@ void flam3_copy_params(flam3_xform *dest, flam3_xform *src, int varn) {
       dest->auger_weight = src->auger_weight;
       dest->auger_freq = src->auger_freq;
       dest->auger_scale = src->auger_scale;
+   } else if (varn==VAR_FLUX) {
+      /* flux */
+      dest->flux_spread = src->flux_spread;
    }
 }
 
@@ -1799,7 +1803,7 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
    int cell_var=0,cpow_var=0,curve_var=0,escher_var=0,lazys_var=0;
    int modulus_var=0,oscope_var=0,popcorn2_var=0,separation_var=0;
    int split_var=0,splits_var=0,stripes_var=0,wedge_var=0,wedgeJ_var=0;
-   int wedgeS_var=0,whorl_var=0,waves2_var=0,auger_var=0;
+   int wedgeS_var=0,whorl_var=0,waves2_var=0,auger_var=0,flux_var=0;
    
    int j;
    int lnv;
@@ -1914,6 +1918,8 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
             waves2_var=1;
          else if (j==VAR_AUGER)
             auger_var=1;
+         else if (j==VAR_FLUX)
+            flux_var=1;
       }
    }
 
@@ -2129,6 +2135,9 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
          fprintf(f, "auger_scale=\"%g\" ", x->auger_scale);
       }
 
+      if (flux_var==1)
+         fprintf(f, "flux_spread=\"%g\" ", x->flux_spread);
+
       fprintf(f, "coefs=\"");
       for (j = 0; j < 3; j++) {
          if (j) fprintf(f, " ");
@@ -2284,6 +2293,8 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
       PRINTNON(auger_weight);
       PRINTNON(auger_freq);
       PRINTNON(auger_scale);
+
+      PRINTNON(flux_spread);
       
       if (!zero_matrix(x->c)) {
          fprintf(f, "coefs=\"");
@@ -3342,6 +3353,12 @@ void flam3_random(flam3_genome *cp, int *ivars, int ivars_n, int sym, int spec_x
          cp->xform[i].auger_freq = floor(5*flam3_random01())+1;
          cp->xform[i].auger_scale = flam3_random01();
       }         
+
+      if (cp->xform[i].var[VAR_FLUX] > 0) {
+         /* Create random params for flux */
+         cp->xform[i].flux_spread = 0.5 + flam3_random01()/2.0;
+      }
+
 
    }
 

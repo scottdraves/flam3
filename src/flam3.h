@@ -59,7 +59,7 @@ int flam3_get_palette(int palette_index, flam3_palette p, double hue_rotation);
 
 extern char *flam3_variation_names[];
 
-#define flam3_nvariations 97
+#define flam3_nvariations 98
 #define flam3_nxforms     12
 
 #define flam3_parent_fn_len     30
@@ -177,6 +177,7 @@ extern char *flam3_variation_names[];
 #define VAR_CSCH 94
 #define VAR_COTH 95
 #define VAR_AUGER 96
+#define VAR_FLUX 97
 
 typedef struct {
 
@@ -385,6 +386,9 @@ typedef struct xform {
    /* Auger */
    double auger_sym, auger_weight;
    double auger_freq, auger_scale;
+
+   /* Flux */
+   double flux_spread;
       
    /* If perspective is used, precalculate these values */
    /* from the _angle and _dist                         */

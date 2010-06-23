@@ -121,6 +121,7 @@ void var93_sech (flam3_iter_helper *f, double weight);
 void var94_csch (flam3_iter_helper *f, double weight);
 void var95_coth (flam3_iter_helper *f, double weight);
 void var96_auger (flam3_iter_helper *f, double weight);
+void var97_flux (flam3_iter_helper *f, double weight);
 
 /* Precalculation functions */
 void perspective_precalc(flam3_xform *xf);
