@@ -534,10 +534,10 @@ static int render_rectangle(flam3_frame *spec, void *out,
    int out_width;
    int filter_width=0;
    int bytes_per_channel = spec->bytes_per_channel;
-   int oversample = spec->genomes[0].spatial_oversample;
-   double highpow = spec->genomes[0].highlight_power;
-   int nbatches = spec->genomes[0].nbatches;
-   int ntemporal_samples = spec->genomes[0].ntemporal_samples;
+   int oversample;
+   double highpow;
+   int nbatches;
+   int ntemporal_samples;
    flam3_palette dmap;
    int gutter_width;
    double vibrancy = 0.0;
@@ -578,6 +578,13 @@ static int render_rectangle(flam3_frame *spec, void *out,
 
    memset(&cp,0, sizeof(flam3_genome));
 
+   /* interpolate and get a control point                      */
+   flam3_interpolate(spec->genomes, spec->ngenomes, spec->time, 0, &cp);
+   oversample = cp.spatial_oversample;
+   highpow = cp.highlight_power;
+   nbatches = cp.nbatches;
+   ntemporal_samples = cp.ntemporal_samples;
+
    if (nbatches < 1) {
        fprintf(stderr, "nbatches must be positive, not %d.\n", nbatches);
        return(1);
@@ -594,17 +601,17 @@ static int render_rectangle(flam3_frame *spec, void *out,
       fth[i].cp.final_xform_index=-1;
       
    /* Set up the output image dimensions, adjusted for scanline */   
-   image_width = spec->genomes[0].width;
+   image_width = cp.width;
    out_width = image_width;
    if (field) {
-      image_height = spec->genomes[0].height / 2;
+      image_height = cp.height / 2;
       
       if (field == flam3_field_odd)
          out = (unsigned char *)out + nchan * bytes_per_channel * out_width;
          
       out_width *= 2;
    } else
-      image_height = spec->genomes[0].height;
+      image_height = cp.height;
 
 
    /* Spatial Filter kernel creation */
@@ -626,9 +633,9 @@ static int render_rectangle(flam3_frame *spec, void *out,
 
    /* temporal filter - we must free temporal_filter and temporal_deltas at the end */
    sumfilt = flam3_create_temporal_filter(nbatches*ntemporal_samples, 
-                                          spec->genomes[0].temporal_filter_type,
-                                          spec->genomes[0].temporal_filter_exp,
-                                          spec->genomes[0].temporal_filter_width,
+                                          cp.temporal_filter_type,
+                                          cp.temporal_filter_exp,
+                                          cp.temporal_filter_width,
                                           &temporal_filter, &temporal_deltas);
                                                                                     
 
