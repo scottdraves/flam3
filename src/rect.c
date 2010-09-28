@@ -259,10 +259,10 @@ static void iter_thread(void *fth) {
    int SBS = ficp->spec->sub_batch_size;
    int fuse;
 
-   fuse = (ficp->spec->earlyclip) ? FUSE_28 : FUSE_27;
-
    double eta = 0.0;
    
+   fuse = (ficp->spec->earlyclip) ? FUSE_28 : FUSE_27;
+
    pauset.tv_sec = 0;
    pauset.tv_nsec = 100000000;
 
