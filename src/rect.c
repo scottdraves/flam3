@@ -33,7 +33,8 @@
 
 
 /* allow this many iterations for settling into attractor */
-#define FUSE 100
+#define FUSE_27 15
+#define FUSE_28 100
 #define WHITE_LEVEL 255
 
 
@@ -256,6 +257,9 @@ static void iter_thread(void *fth) {
    flam3_iter_constants *ficp = fthp->fic;
    struct timespec pauset;
    int SBS = ficp->spec->sub_batch_size;
+   int fuse;
+
+   fuse = (ficp->spec->earlyclip) ? FUSE_28 : FUSE_27;
 
    double eta = 0.0;
    
@@ -391,7 +395,7 @@ static void iter_thread(void *fth) {
       fthp->iter_storage[3] = flam3_random_isaac_01(&(fthp->rc));
 
       /* Execute iterations */
-      badcount = flam3_iterate(&(fthp->cp), sub_batch_size, FUSE, fthp->iter_storage, ficp->xform_distrib, &(fthp->rc));
+      badcount = flam3_iterate(&(fthp->cp), sub_batch_size, fuse, fthp->iter_storage, ficp->xform_distrib, &(fthp->rc));
 
       #if defined(HAVE_LIBPTHREAD) && defined(USE_LOCKS)
         /* Lock mutex for access to accumulator */
