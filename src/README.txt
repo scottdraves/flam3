@@ -13,7 +13,7 @@ instead of a command like
 
     env dtime=5 prefix=foo. in=test.flame flam3-animate
 
-say
+use the following set of commands:
 
     set dtime=5
     set prefix=foo.
@@ -285,6 +285,7 @@ The complete list of variations:
   94. csch
   95. coth
   96. auger
+  97. flux
   
 see http://flam3.com/flame.pdf for descriptions & formulas for each of
 these.  note that, by default, if a random flame is requested and neither
@@ -305,12 +306,15 @@ todo:  eliminate all static storage.
 
 changelog:
 
+10/04/10 Small tweaks.  Fuse iterations default to 15 but increase to
+   100 when using earlyclip. flux variation added. Release as 2.8 final.
+
 12/20/09 Highlight power now interpolates smoothly from old behavior
     (-1) to new behavior.  flam3-genome 'split' mode was broken, fixed
-	(thanks Exper.)  Die gracefully instead of segfault when very small
-	estimator_curve values are specified.  Version attribute added to
-	flame tag.  Number of iterations used to fuse attractor increased to
-	100.  Release as 2.8beta7.
+    (thanks Exper.)  Die gracefully instead of segfault when very small
+    estimator_curve values are specified.  Version attribute added to
+    flame tag.  Number of iterations used to fuse attractor increased to
+    100.  Release as 2.8beta7.
 
 11/24/09 Potential speedup of 5% over prior versions.  Many threading
     issues identified and resolved when using flam3 shared library as
@@ -325,12 +329,12 @@ changelog:
 10/16/09 Non-threadsafe progress tracking code in main iteration thread
     replaced with per-render progress storage.  Fixed bug where pausing
     render during density estimation stage terminated render.  Waves2
-	variation fixed (thx Joel F). Release as 2.8beta5.
+    variation fixed (thx Joel F). Release as 2.8beta5.
 
 10/07/09 Fixed bug affecting 'animate' mode with flam3-genome.  Changed
-	estimate_bounding_box to increase discarded iterations if numerous
-	badvals were encountered during iterations.  Exported a few more
-	functions for Windows DLL.  Release as 2.8beta4.
+    estimate_bounding_box to increase discarded iterations if numerous
+    badvals were encountered during iterations.  Exported a few more
+    functions for Windows DLL.  Release as 2.8beta4.
 
 10/03/09 Changed color_speed range from 0 (no color change) to 1
     (use new xform color).  Animate attribute is now 0 for no motion,
@@ -358,7 +362,8 @@ changelog:
     - symmetry has been broken out into color_speed and animate tags
       with the same sense (which is confusing and will be fixed in a
       future release).
-    - set the flam27 parameter to output backwards compatible genomes.
+    - set the flam27 env var to output backwards compatible genomes
+      (when possible.)
     - passes the consistency test where rendering an image at double
       size and filtering it down produces the same results as the
       original (modulo quality).

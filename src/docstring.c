@@ -41,7 +41,7 @@ static char *the_docstring1 =
 "\n"
 "    env dtime=5 prefix=foo. in=test.flame flam3-animate\n"
 "\n"
-"say\n"
+"use the following set of commands:\n"
 "\n"
 "    set dtime=5\n"
 "    set prefix=foo.\n"
