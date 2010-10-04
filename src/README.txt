@@ -26,6 +26,16 @@ As usual, to configure, build, and install:
     make
     sudo make install
 
+If this has problems, you may need to re-generate some configuration
+files.  Do the following steps:
+
+    libtoolize
+    aclocal
+    automake
+    autoconf
+
+and then try to configure and install as above.
+
 This package depends on development packages for libz, libpng,
 libjpeg, and libxml2.
 
