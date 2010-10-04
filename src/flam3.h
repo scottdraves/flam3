@@ -554,7 +554,7 @@ EXPORT void flam3_interpolate(flam3_genome *genomes, int ngenomes, double time, 
 /* print genome to given file with extra_attributes if not NULL */
 void flam3_print(FILE *f, flam3_genome *g, char *extra_attributes, int print_edits);
 void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, double *chaos_row, int motion_flag);
-char *flam3_print_to_string(flam3_genome *cp);
+EXPORT char *flam3_print_to_string(flam3_genome *cp);
 
 /* ivars is a list of variations to use, or flam3_variation_random     */
 /* ivars_n is the number of values in ivars to select from.            */
