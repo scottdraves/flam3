@@ -316,8 +316,8 @@ todo:  eliminate all static storage.
 
 changelog:
 
-10/04/10 Small tweaks.  Fuse iterations default to 15 but increase to
-   100 when using earlyclip. flux variation added. Release as 2.8 final.
+10/05/10 Small tweaks.  Fuse iterations default to 15 but increase to
+   100 when using earlyclip. flux variation added. Release as 3.0.
 
 12/20/09 Highlight power now interpolates smoothly from old behavior
     (-1) to new behavior.  flam3-genome 'split' mode was broken, fixed

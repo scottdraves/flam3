@@ -8,7 +8,7 @@ ACLOCAL_AMFLAGS = -I m4
 man1_MANS = flam3-animate.man flam3-genome.man flam3-render.man flam3-convert.man
 bin_PROGRAMS = flam3-animate flam3-genome flam3-render flam3-convert
 lib_LTLIBRARIES = libflam3.la
-include_HEADERS = flam3.h isaac.h isaacs.h
+include_HEADERS = flam3.h isaac.h isaacs.h rect.c
 
 libflam3_la_SOURCES = flam3.c filters.c parser.c variations.c interpolation.c palettes.c jpeg.c png.c isaac.c
 libflam3_la_LDFLAGS = -no-undefined -ljpeg -lpng -lz -lpthread
