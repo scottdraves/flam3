@@ -2734,7 +2734,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=flam3
- VERSION="2.8"
+ VERSION="3.0"
 
 
 cat >>confdefs.h <<_ACEOF
