@@ -150,10 +150,14 @@ void interpolate_cmap(flam3_palette cmap, double blend,
                       int index0, double hue0, int index1, double hue1) {
                  
    flam3_palette p0,p1;
-   int i, j;
+   int i, j, rcode;
 
-   flam3_get_palette(index0, p0, hue0);
-   flam3_get_palette(index1, p1, hue1);
+   rcode = flam3_get_palette(index0, p0, hue0);
+   if (rcode<0)
+      fprintf(stderr,"unable to retrieve palette %d, setting to white\n", index0);
+   rcode = flam3_get_palette(index1, p1, hue1);
+   if (rcode<0)
+      fprintf(stderr,"unable to retrieve palette %d, setting to white\n", index1);
 
    for (i = 0; i < 256; i++) {
       double t[5], s[5];

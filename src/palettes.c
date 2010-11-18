@@ -26,6 +26,7 @@ static void parse_palettes(xmlNode *node) {
    xmlAttrPtr attr;
    char *val;
    lib_palette *pal;
+   int hex_error;
     
    while (node) {
       if (node->type == XML_ELEMENT_NODE && !xmlStrcmp(node->name, (const xmlChar *)"palette")) {
@@ -44,12 +45,14 @@ static void parse_palettes(xmlNode *node) {
                
                c_idx=0;
                col_count = 0;
+               hex_error = 0;
                
                do {
                   sscanf_ret = sscanf((char *)&(val[c_idx]),"00%2x%2x%2x",&r,&g,&b);
                   if (sscanf_ret != 3) {
-                     printf("Error:  Problem reading hexadecimal color data.\n");
-                     exit(1);
+                     fprintf(stderr,"error:  problem reading hexadecimal color data '%8s'\n",&val[c_idx]);
+                     hex_error = 1;
+                     break;
                   }
 			         c_idx += 8;
                   while (isspace( (int)val[c_idx]))
@@ -72,8 +75,10 @@ static void parse_palettes(xmlNode *node) {
             attr = attr->next;
          }
          
-         npalettes++;
-         the_palettes = realloc(the_palettes, (1 + npalettes) * sizeof(lib_palette));
+         if (hex_error == 0) {
+            npalettes++;
+            the_palettes = realloc(the_palettes, (1 + npalettes) * sizeof(lib_palette));
+         }
       } else
          parse_palettes(node->children);
          
@@ -85,14 +90,14 @@ static int init_palettes(char *filename) {
     FILE *fp;
     xmlDocPtr doc;
     xmlNode *rootnode;
-   int i, c, slen = 5000;
-   char *s;
+    int i, c, slen = 5000;
+    char *s;
 
     fp = fopen(filename, "rb");
     if (NULL == fp) {
-	fprintf(stderr, "flam3: could not open palette file ");
-	perror(filename);
-	exit(1);
+        fprintf(stderr, "flam3: could not open palette file ");
+        perror(filename);
+        return(-1);
     }
    
    /* Incrementally read XML file into a string */
@@ -101,10 +106,10 @@ static int init_palettes(char *filename) {
    do {
       c = getc(fp);
       if (EOF == c) {
-	  if (ferror(fp)) {
-	      perror(filename);
-	      exit(1);
-	  }
+         if (ferror(fp)) {
+            perror(filename);
+            return(-1);
+         }
          break;
       }
       s[i++] = c;
@@ -120,7 +125,7 @@ static int init_palettes(char *filename) {
    doc = xmlReadMemory(s, (int)strlen(s), filename, NULL, XML_PARSE_NONET);
    if (NULL == doc) {
        fprintf(stderr, "error parsing %s (%s).\n", filename, s);
-       exit(1);
+       return(-1);
    }
    rootnode = xmlDocGetRootElement(doc);
    the_palettes = malloc(sizeof(lib_palette));
@@ -135,12 +140,22 @@ static int init_palettes(char *filename) {
 
 int flam3_get_palette(int n, flam3_palette c, double hue_rotation) {
    int cmap_len = 256;
-   int idx, i, j;
+   int idx, i, j, rcode;
 
-   if (NULL == the_palettes) {
-   
+   // set palette to all white in case there are problems
+   for (i = 0; i < cmap_len; i++) {
+   	c[i].index = i;
+      for (j = 0; j < 4; j++)
+         c[i].color[j] = 1.0;
+   }
+
+   if (NULL == the_palettes) {   
       char *d = getenv("flam3_palettes");
-      init_palettes(d ? d : (PACKAGE_DATA_DIR "/flam3-palettes.xml"));
+      rcode = init_palettes(d ? d : (PACKAGE_DATA_DIR "/flam3-palettes.xml"));
+      if (rcode<0) {
+         fprintf(stderr,"error reading xml palette file, setting to all white\n");
+         return(-1);
+      }
    }
    
    if (flam3_palette_random == n)
@@ -176,13 +191,7 @@ int flam3_get_palette(int n, flam3_palette c, double hue_rotation) {
    
    fprintf(stderr, "warning: palette number %d not found, using white.\n", n);
 
-   for (i = 0; i < cmap_len; i++) {
-   	c[i].index = i;
-      for (j = 0; j < 4; j++)
-         c[i].color[j] = 1.0;
-   }
-
-   return flam3_palette_random;
+   return(-1);
 }
 
 /* rgb 0 - 1,
@@ -398,7 +407,7 @@ static double try_colors(flam3_genome *g, int color_resolution) {
     image = (unsigned char *) calloc(g->width * g->height, 3);
     if (flam3_render(&f, image, flam3_field_both, 3, 0, &stats)) {
        fprintf(stderr,"Error rendering test image for trycolors.  Aborting.\n");
-       exit(1);
+       return(-1);
     }
 
     hist = calloc(sizeof(int), res3);
@@ -443,7 +452,7 @@ static double try_colors(flam3_genome *g, int color_resolution) {
     /* Free xform storage */
     clear_cp(&saved,flam3_defaults_on);
 
-    return (double) hits / res3;
+    return (double) (hits / res3);
 }
 
 static void change_colors(flam3_genome *g, int change_palette) {
@@ -452,6 +461,8 @@ static void change_colors(flam3_genome *g, int change_palette) {
    if (change_palette) {
       g->hue_rotation = 0.0;
       g->palette_index = flam3_get_palette(flam3_palette_random, g->palette, 0.0);
+      if (g->palette_index < 0)
+         fprintf(stderr,"error retrieving random palette, setting to all white\n");
    }
    for (i = 0; i < g->num_xforms; i++) {
       g->xform[i].color = flam3_random01();
@@ -468,16 +479,27 @@ void flam3_improve_colors(flam3_genome *g, int ntries, int change_palette, int c
    flam3_genome best_genome;
 
    memset(&best_genome, 0, sizeof(flam3_genome));
+
    best = try_colors(g, color_resolution);
+   if (best<0) {
+      fprintf(stderr,"error in try_colors, skipping flam3_improve_colors\n");
+      return;
+   }
+
    flam3_copy(&best_genome,g);
    for (i = 0; i < ntries; i++) {
       change_colors(g, change_palette);
       b = try_colors(g, color_resolution);
+      if (b < 0) {
+         fprintf(stderr,"error in try_colors, aborting tries\n");
+         break;
+      }      
       if (b > best) {
          best = b;
          flam3_copy(&best_genome,g);
       }
    }
+
    flam3_copy(g,&best_genome);
    clear_cp(&best_genome,flam3_defaults_on);
 }

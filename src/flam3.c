@@ -704,6 +704,7 @@ void flam3_interpolate(flam3_genome cps[], int ncps,
    int i1, i2;
    double c[2];
    flam3_genome cpi[4];
+   int smoothflag = 0;
 
    if (1 == ncps) {
       flam3_copy(result, &(cps[0]));
@@ -735,17 +736,25 @@ void flam3_interpolate(flam3_genome cps[], int ncps,
    /* and ensure that they both have the same number before progressing */
    if (flam3_interpolation_linear == cps[i1].interpolation) {
        flam3_align(&cpi[0], &cps[i1], 2);
+       smoothflag = 0;
      
    } else {
        if (0 == i1) {
-      fprintf(stderr, "error: cannot use smooth interpolation on first segment.\n");
-      exit(1);
+          fprintf(stderr, "error: cannot use smooth interpolation on first segment.\n");
+          fprintf(stderr, "reverting to linear interpolation.\n");
+          flam3_align(&cpi[0], &cps[i1], 2);
+          smoothflag = 0;
        }
+
        if (ncps-1 == i2) {
-      fprintf(stderr, "error: cannot use smooth interpolation on last segment.\n");
-      exit(1);
+          fprintf(stderr, "error: cannot use smooth interpolation on last segment.\n");
+          fprintf(stderr, "reverting to linear interpolation.\n");
+          flam3_align(&cpi[0], &cps[i1], 2);
+          smoothflag = 0;
        }
+
        flam3_align(&cpi[0], &cps[i1-1], 4);
+       smoothflag = 1;
    }
    
    /* Clear the destination cp */
@@ -763,7 +772,7 @@ void flam3_interpolate(flam3_genome cps[], int ncps,
    result->interpolation_type = cpi[0].interpolation_type;
    result->palette_interpolation = flam3_palette_interpolation_hsv;
 
-   if (flam3_interpolation_linear == cps[i1].interpolation) {
+   if (!smoothflag) {
        flam3_interpolate_n(result, 2, cpi, c, stagger);
    } else {
        interpolate_catmull_rom(cpi, c[1], result);
@@ -1355,9 +1364,10 @@ int flam3_count_nthreads(void) {
    kr = host_info(host, HOST_BASIC_INFO, (host_info_t)&hi, &size);
    if (kr != KERN_SUCCESS) {
        mach_error("host_info():", kr);
-       exit(EXIT_FAILURE);
-   }
-   nthreads = hi.avail_cpus;
+       /* set threads to 1 on error */
+       nthreads = 1;
+   } else
+       nthreads = hi.avail_cpus;
 #else 
 #ifndef _SC_NPROCESSORS_ONLN
    char line[MAXBUF];
@@ -1501,9 +1511,8 @@ flam3_genome * flam3_parse_from_file(FILE *f, char *fname, int default_flag, int
          slen *= 2;
          snew = realloc(s, slen);
          if (snew==NULL) {
-            fprintf(stderr,"XML file too large to be read - aborting.\n");
-            free(s);
-            exit(1);
+            fprintf(stderr,"XML file too large to be read. continuing with partial file.\n");
+            break;
          } else
             s = snew;
       }
@@ -2882,7 +2891,11 @@ void flam3_mutate(flam3_genome *cp, int mutate_mode, int *ivars, int ivars_n, in
       } else { /* randomize palette only */
 
          cp->palette_index = flam3_get_palette(flam3_palette_random, cp->palette, cp->hue_rotation);
-         add_to_action(action,"mutate color palette");
+         /* if our palette retrieval fails, skip the mutation */
+         if (cp->palette_index >= 0)
+            add_to_action(action,"mutate color palette");
+         else
+            fprintf(stderr,"failure getting random palette, palette set to white\n");
 
       }
    } else if (mutate_mode == MUTATE_DELETE_XFORM) {
@@ -2947,6 +2960,8 @@ void flam3_random(flam3_genome *cp, int *ivars, int ivars_n, int sym, int spec_x
 
    cp->hue_rotation = (random()&7) ? 0.0 : flam3_random01();
    cp->palette_index = flam3_get_palette(flam3_palette_random, cp->palette, cp->hue_rotation);
+   if (cp->palette_index < 0)
+      fprintf(stderr,"error getting palette from xml file, setting to all white\n");
    cp->time = 0.0;
    cp->interpolation = flam3_interpolation_linear;
    cp->palette_interpolation = flam3_palette_interpolation_hsv;

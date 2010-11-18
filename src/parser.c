@@ -253,9 +253,11 @@ void scan_for_flame_nodes(xmlNode *cur_node, char *parent_file, int default_flag
          /* Clear out the realloc'd memory */
          memset(&(genome_storage[*all_ncps]),0,sizeof(flam3_genome));
 
-         if (loc_current_cp.palette_index != flam3_palette_random) {
-            flam3_get_palette(loc_current_cp.palette_index, loc_current_cp.palette,
+         if (loc_current_cp.palette_index != -1) {
+            col_success = flam3_get_palette(loc_current_cp.palette_index, loc_current_cp.palette,
                loc_current_cp.hue_rotation);
+            if (col_success < 0)
+               fprintf(stderr,"error retrieving palette %d, setting to all white\n",loc_current_cp.palette_index);
          }
          
          col_success = flam3_interp_missing_colors(&loc_current_cp);
