@@ -213,9 +213,9 @@ int main(int argc, char **argv) {
      f.bytes_per_channel = 1;
          
 
-  image = (void *) malloc((size_t)channels *
+  image = (void *) calloc((size_t)channels *
 				   (size_t)cps[0].width *
-				   (size_t)cps[0].height * f.bytes_per_channel);
+				   (size_t)cps[0].height * f.bytes_per_channel, sizeof(char));
 
   if (dtime < 1) {
     fprintf(stderr, "dtime must be positive, not %d.\n", dtime);

@@ -106,8 +106,6 @@ void write_png(FILE *file, void *image, int width, int height, flam3_img_comment
        im[i] = htons(im[i]);
     }
   }
-      
-  
 
   if (pngcom_enable==1)
 	  png_set_text(png_ptr, info_ptr, text, FLAM3_PNG_COM);
@@ -117,6 +115,15 @@ void write_png(FILE *file, void *image, int width, int height, flam3_img_comment
   png_write_end(png_ptr, info_ptr);
   png_destroy_write_struct(&png_ptr, &info_ptr);
   free(rows);
+
+  /* Swap back the bytes in case we're doing strips */       
+  if (2==bpc && testbe != htons(testbe)) {
+    unsigned short *im = (unsigned short *)image;
+    for (i=0; i<height*width*4; i++) {
+       im[i] = htons(im[i]);
+    }
+  }
+
 }
 
 #define SIG_CHECK_SIZE 8

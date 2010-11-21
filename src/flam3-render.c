@@ -295,7 +295,7 @@ int main(int argc, char **argv) {
          if (last_size != -1)
             free(image);
          last_size = this_size;
-         image = (void *) malloc(this_size);
+         image = (void *) calloc(this_size, sizeof(char));
          if (NULL==image) {
             fprintf(stderr,"Error allocating memory for image.  Aborting\n");
             exit(1);
@@ -351,7 +351,7 @@ int main(int argc, char **argv) {
             sprintf(fname, "%s%05d.%s", prefix, i, format);
          }
          if (verbose) {
-        fprintf(stderr, "writing %s...", fname);
+            fprintf(stderr, "writing %s...", fname);
          }
          fp = fopen(fname, "wb");
          if (NULL == fp) {
@@ -381,8 +381,8 @@ int main(int argc, char **argv) {
             fprintf(fp, "P6\n");
             fprintf(fp, "%d %d\n255\n", cps[i].width, real_height);
             if (this_size != fwrite((unsigned char *)image, 1, this_size, fp)) {
-		perror(fname);
-	    }
+		       perror(fname);
+	        }
          }
          /* Free string */
          free(fpc.genome);
