@@ -448,8 +448,17 @@ main(argc, argv)
 	}
 	putenv(palpath);
 
-#endif         
+#endif   
 
+   if (argc>1) {
+      if (strcmp("--version",argv[1])==0) {
+         printf("FLAM3-%s\n",flam3_version());
+         exit(0);
+      } else {
+         printf("unrecognized option %s, aborting.\n",argv[1]);
+         exit(-1);
+      }
+   }
 
    verbose = argi("verbose", 0);
 
