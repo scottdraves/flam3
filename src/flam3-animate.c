@@ -299,7 +299,7 @@ int main(int argc, char **argv) {
    
     if (!strcmp(format, "png")) {
     
-       write_png(fp, image, cps[0].width, cps[0].height, &fpc, 1);       
+       write_png(fp, image, cps[0].width, cps[0].height, &fpc, f.bytes_per_channel);       
        
     } else if (!strcmp(format, "jpg")) {
     
