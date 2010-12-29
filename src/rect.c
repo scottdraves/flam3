@@ -461,7 +461,7 @@ static void iter_thread(void *fth) {
                bump_no_overflow(b[0][1], logvis*ficp->dmap[color_index0].color[1]);
                bump_no_overflow(b[0][2], logvis*ficp->dmap[color_index0].color[2]);
                bump_no_overflow(b[0][3], logvis*ficp->dmap[color_index0].color[3]);
-               bump_no_overflow(b[0][4], 255.0);
+               bump_no_overflow(b[0][4], logvis*255.0);
 #else
             dbl_index0 = p[2] * CMAP_SIZE;
             color_index0 = (int) (dbl_index0);
@@ -506,7 +506,7 @@ static void iter_thread(void *fth) {
                bump_no_overflow(b[0][1], logvis*interpcolor[1]);
                bump_no_overflow(b[0][2], logvis*interpcolor[2]);
                bump_no_overflow(b[0][3], logvis*interpcolor[3]);
-               bump_no_overflow(b[0][4], 255.0);
+               bump_no_overflow(b[0][4], logvis*255.0);
             }
 #endif
 
