@@ -316,6 +316,10 @@ todo:  eliminate all static storage.
 
 changelog:
 
+12/29/10 Added --version option to flam3-genome.  fixed bug in 16 bpc
+   png image writing when using strips.  xform opacity now affects
+   calculated width of density estimation filters.  Release as 3.0.1.
+
 10/05/10 Small tweaks.  Fuse iterations default to 15 but increase to
    100 when using earlyclip. flux variation added. Release as 3.0.
 
