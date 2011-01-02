@@ -131,6 +131,7 @@ char *flam3_variation_names[1+flam3_nvariations] = {
   "coth",
   "auger",
   "flux",
+  "mobius",
   0
 };
 
@@ -1922,6 +1923,23 @@ void var97_flux (flam3_iter_helper *f, double weight) {
     f->p1 += avgr * sin(avga);
 }
 
+void var98_mobius (flam3_iter_helper *f, double weight) {
+
+    // Mobius, by eralex
+    double re_u, im_u, re_v, im_v, rad_v;
+
+    re_u = f->xform->mobius_re_a * f->tx - f->xform->mobius_im_a * f->ty + f->xform->mobius_re_b;
+    im_u = f->xform->mobius_re_a * f->ty + f->xform->mobius_im_a * f->tx + f->xform->mobius_im_b;
+    re_v = f->xform->mobius_re_c * f->tx - f->xform->mobius_im_c * f->ty + f->xform->mobius_re_d;
+    im_v = f->xform->mobius_re_c * f->ty + f->xform->mobius_im_c * f->tx + f->xform->mobius_im_d;
+
+    rad_v = weight / (re_v*re_v + im_v*im_v);
+
+    f->p0 += rad_v * (re_u*re_v + im_u*im_v);
+    f->p1 += rad_v * (im_u*re_v - re_u*im_v);
+}
+    
+
 /* Precalc functions */
 
 void perspective_precalc(flam3_xform *xf) {
@@ -2359,6 +2377,8 @@ int apply_xform(flam3_genome *cp, int fn, double *p, double *q, randctx *rc)
                 var96_auger(&f, weight); break;
          case (VAR_FLUX):
                 var97_flux(&f, weight); break;
+         case (VAR_MOBIUS):
+                var98_mobius(&f, weight); break;
       }
 
    }
@@ -2533,5 +2553,14 @@ void initialize_xforms(flam3_genome *thiscp, int start_here) {
       thiscp->xform[i].super_shape_holes = 0.0;
       thiscp->xform[i].conic_eccentricity = 1.0;
       thiscp->xform[i].conic_holes = 0.0;
+
+      thiscp->xform[i].mobius_re_a = 0.0;
+      thiscp->xform[i].mobius_re_b = 0.0;
+      thiscp->xform[i].mobius_re_c = 0.0;
+      thiscp->xform[i].mobius_re_d = 0.0;
+      thiscp->xform[i].mobius_im_a = 0.0;
+      thiscp->xform[i].mobius_im_b = 0.0;
+      thiscp->xform[i].mobius_im_c = 0.0;
+      thiscp->xform[i].mobius_im_d = 0.0;
    }
 }

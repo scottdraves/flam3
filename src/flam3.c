@@ -674,6 +674,14 @@ void apply_motion_parameters(flam3_xform *xf, flam3_xform *addto, double blend) 
       APPMOT(auger_freq);
       APPMOT(auger_scale);
       APPMOT(flux_spread);
+      APPMOT(mobius_re_a);
+      APPMOT(mobius_re_b);
+      APPMOT(mobius_re_c);
+      APPMOT(mobius_re_d);
+      APPMOT(mobius_im_a);
+      APPMOT(mobius_im_b);
+      APPMOT(mobius_im_c);
+      APPMOT(mobius_im_d);
 
       for (j = 0; j < flam3_nvariations; j++)
          APPMOT(var[j]);
@@ -974,6 +982,16 @@ void flam3_copy_params(flam3_xform *dest, flam3_xform *src, int varn) {
    } else if (varn==VAR_FLUX) {
       /* flux */
       dest->flux_spread = src->flux_spread;
+   } else if (varn==VAR_MOBIUS) {
+      /* mobius */
+      dest->mobius_re_a = src->mobius_re_a;
+      dest->mobius_re_b = src->mobius_re_b;
+      dest->mobius_re_c = src->mobius_re_c;
+      dest->mobius_re_d = src->mobius_re_d;
+      dest->mobius_im_a = src->mobius_im_a;
+      dest->mobius_im_b = src->mobius_im_b;
+      dest->mobius_im_c = src->mobius_im_c;
+      dest->mobius_im_d = src->mobius_im_d;
    }
 }
 
@@ -1813,7 +1831,8 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
    int modulus_var=0,oscope_var=0,popcorn2_var=0,separation_var=0;
    int split_var=0,splits_var=0,stripes_var=0,wedge_var=0,wedgeJ_var=0;
    int wedgeS_var=0,whorl_var=0,waves2_var=0,auger_var=0,flux_var=0;
-   
+   int mobius_var=0;
+
    int j;
    int lnv;
 
@@ -1929,6 +1948,8 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
             auger_var=1;
          else if (j==VAR_FLUX)
             flux_var=1;
+         else if (j==VAR_MOBIUS)
+            mobius_var=1;
       }
    }
 
@@ -2147,6 +2168,17 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
       if (flux_var==1)
          fprintf(f, "flux_spread=\"%g\" ", x->flux_spread);
 
+      if (mobius_var==1) {
+         fprintf(f, "mobius_re_a=\"%g\" ", x->mobius_re_a);
+         fprintf(f, "mobius_im_a=\"%g\" ", x->mobius_im_a);
+         fprintf(f, "mobius_re_b=\"%g\" ", x->mobius_re_b);
+         fprintf(f, "mobius_im_b=\"%g\" ", x->mobius_im_b);
+         fprintf(f, "mobius_re_c=\"%g\" ", x->mobius_re_c);
+         fprintf(f, "mobius_im_c=\"%g\" ", x->mobius_im_c);
+         fprintf(f, "mobius_re_d=\"%g\" ", x->mobius_re_d);
+         fprintf(f, "mobius_im_d=\"%g\" ", x->mobius_im_d);
+      }
+
       fprintf(f, "coefs=\"");
       for (j = 0; j < 3; j++) {
          if (j) fprintf(f, " ");
@@ -2304,6 +2336,15 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
       PRINTNON(auger_scale);
 
       PRINTNON(flux_spread);
+
+      PRINTNON(mobius_re_a);
+      PRINTNON(mobius_im_a);
+      PRINTNON(mobius_re_b);
+      PRINTNON(mobius_im_b);
+      PRINTNON(mobius_re_c);
+      PRINTNON(mobius_im_c);
+      PRINTNON(mobius_re_d);
+      PRINTNON(mobius_im_d);
       
       if (!zero_matrix(x->c)) {
          fprintf(f, "coefs=\"");
@@ -3374,6 +3415,17 @@ void flam3_random(flam3_genome *cp, int *ivars, int ivars_n, int sym, int spec_x
          cp->xform[i].flux_spread = 0.5 + flam3_random01()/2.0;
       }
 
+      if (cp->xform[i].var[VAR_MOBIUS] > 0) {
+         /* Create random params for mobius */
+         cp->xform[i].mobius_re_a = flam3_random11();
+         cp->xform[i].mobius_im_a = flam3_random11();
+         cp->xform[i].mobius_re_b = flam3_random11();
+         cp->xform[i].mobius_im_b = flam3_random11();
+         cp->xform[i].mobius_re_c = flam3_random11();
+         cp->xform[i].mobius_im_c = flam3_random11();
+         cp->xform[i].mobius_re_d = flam3_random11();
+         cp->xform[i].mobius_im_d = flam3_random11();
+      }
 
    }
 

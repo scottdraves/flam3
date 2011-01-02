@@ -1215,6 +1215,22 @@ int parse_xform_xml(xmlNode *chld_node,flam3_xform *this_xform, int *num_xaos,
          this_xform->auger_scale = flam3_atof(att_str);
       } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"flux_spread")) {
          this_xform->flux_spread = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"Re_A") || !xmlStrcmp(cur_att->name, (const xmlChar *)"mobius_re_a")) {
+         this_xform->mobius_re_a = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"Re_B") || !xmlStrcmp(cur_att->name, (const xmlChar *)"mobius_re_b")) {
+         this_xform->mobius_re_b = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"Re_C") || !xmlStrcmp(cur_att->name, (const xmlChar *)"mobius_re_c")) {
+         this_xform->mobius_re_c = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"Re_D") || !xmlStrcmp(cur_att->name, (const xmlChar *)"mobius_re_d")) {
+         this_xform->mobius_re_d = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"Im_A") || !xmlStrcmp(cur_att->name, (const xmlChar *)"mobius_im_a")) {
+         this_xform->mobius_im_a = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"Im_B") || !xmlStrcmp(cur_att->name, (const xmlChar *)"mobius_im_b")) {
+         this_xform->mobius_im_b = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"Im_C") || !xmlStrcmp(cur_att->name, (const xmlChar *)"mobius_im_c")) {
+         this_xform->mobius_im_c = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"Im_D") || !xmlStrcmp(cur_att->name, (const xmlChar *)"mobius_im_d")) {
+         this_xform->mobius_im_d = flam3_atof(att_str);
       } else {
          int v = var2n((char *) cur_att->name);
          if (v != flam3_variation_none)
