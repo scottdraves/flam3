@@ -87,7 +87,7 @@ typedef struct {
    double badvals; /* accumulates all badvalue resets */
    double batch_size;
    int temporal_sample_num,ntemporal_samples;
-   int batch_num, nbatches, aborted;
+   int batch_num, nbatches, aborted, cmap_size;
    time_t *progress_timer;
    time_t *progress_timer_history;
    double *progress_history;

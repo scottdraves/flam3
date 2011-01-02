@@ -106,14 +106,13 @@ insert_palette  unset           insert the palette into the image.
 enable_jpeg_comments  1         enables comments in the jpeg header (render and animate)
 enable_png_comments   1         enables comments in the png header (render and animate)
 
-New in 2.8:
-
 earlyclip       0               enables the early clipping of rgb values for better antialiasing and resizing
                                 defaults to 0 for backwards compatibility
 flam27          0               flam3 2.7 compatibility mode; ensures generated genomes can be used by flam3 2.7.18
 stagger         0               affects simultaneity of xform interpolation during genome interpolation.
                                 represents how 'separate' the xforms are interpolated.  set to 1 for each
                                 xform to be interpolated individually, fractions control interp overlap.
+apo_palette     0               set this to 1 to use only the first 255 elements of the palette (apophysis compatibility)
 
 for example:
 

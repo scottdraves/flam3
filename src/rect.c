@@ -258,6 +258,8 @@ static void iter_thread(void *fth) {
    struct timespec pauset;
    int SBS = ficp->spec->sub_batch_size;
    int fuse;
+   int cmap_size = ficp->cmap_size;
+   int cmap_size_m1 = ficp->cmap_size-1;
 
    double eta = 0.0;
    
@@ -443,7 +445,7 @@ static void iter_thread(void *fth) {
             
             //fprintf(stdout,"%.16f\n",p[2]*256.0);
             
-            while(color_index0 < CMAP_SIZE_M1) {
+            while(color_index0 < cmap_size_m1) {
             	if (ficp->dmap[color_index0+1].index > p[2])
             	   break;
             	else
@@ -463,15 +465,15 @@ static void iter_thread(void *fth) {
                bump_no_overflow(b[0][3], logvis*ficp->dmap[color_index0].color[3]);
                bump_no_overflow(b[0][4], logvis*255.0);
 #else
-            dbl_index0 = p[2] * CMAP_SIZE;
+            dbl_index0 = p[2] * cmap_size;
             color_index0 = (int) (dbl_index0);
             
             if (flam3_palette_mode_linear == fthp->cp.palette_mode) {
                if (color_index0 < 0) {
                   color_index0 = 0;
                   dbl_frac = 0;
-               } else if (color_index0 >= CMAP_SIZE_M1) {
-                  color_index0 = CMAP_SIZE_M1-1;
+               } else if (color_index0 >= cmap_size_m1) {
+                  color_index0 = cmap_size_m1-1;
                   dbl_frac = 1.0;
                } else {
                   /* interpolate between color_index0 and color_index0+1 */
@@ -487,8 +489,8 @@ static void iter_thread(void *fth) {
             
                if (color_index0 < 0) {
                   color_index0 = 0;
-               } else if (color_index0 >= CMAP_SIZE_M1) {
-                  color_index0 = CMAP_SIZE_M1;
+               } else if (color_index0 >= cmap_size_m1) {
+                  color_index0 = cmap_size_m1;
                }
                         
                for (ci=0;ci<4;ci++)
@@ -563,6 +565,8 @@ static int render_rectangle(flam3_frame *spec, void *out,
    int thi;
    time_t tstart,tend;   
    double sumfilt;
+   char *ai;
+   int cmap_size;
    
    char *last_block;
    size_t memory_rqd;
@@ -579,6 +583,9 @@ static int render_rectangle(flam3_frame *spec, void *out,
    fic.aborted = 0;
 
    stats->num_iters = 0;
+
+   /* correct for apophysis's use of 255 colors in the palette rather than all 256 */
+   cmap_size = 256 - argi("apo_palette",0);
 
    memset(&cp,0, sizeof(flam3_genome));
 
@@ -769,10 +776,10 @@ static int render_rectangle(flam3_frame *spec, void *out,
 
          /* compute the colormap entries.                             */
          /* the input colormap is 256 long with entries from 0 to 1.0 */
-         for (j = 0; j < CMAP_SIZE; j++) {
-            dmap[j].index = cp.palette[(j * 256) / CMAP_SIZE].index / 256.0;
+         for (j = 0; j < cmap_size; j++) {
+            dmap[j].index = cp.palette[(j * 256) / cmap_size].index / 256.0;
             for (k = 0; k < 4; k++)
-               dmap[j].color[k] = (cp.palette[(j * 256) / CMAP_SIZE].color[k] * WHITE_LEVEL) * color_scalar;
+               dmap[j].color[k] = (cp.palette[(j * 256) / cmap_size].color[k] * WHITE_LEVEL) * color_scalar;
          }
 
          /* compute camera */
@@ -836,6 +843,7 @@ static int render_rectangle(flam3_frame *spec, void *out,
          fic.ntemporal_samples = ntemporal_samples;
          fic.batch_num = batch_num;
          fic.nbatches = nbatches;
+         fic.cmap_size = cmap_size;
 
          fic.dmap = (flam3_palette_entry *)dmap;
          fic.color_scalar = color_scalar;
