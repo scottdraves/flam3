@@ -776,10 +776,10 @@ static int render_rectangle(flam3_frame *spec, void *out,
 
          /* compute the colormap entries.                             */
          /* the input colormap is 256 long with entries from 0 to 1.0 */
-         for (j = 0; j < cmap_size; j++) {
-            dmap[j].index = cp.palette[(j * 256) / cmap_size].index / 256.0;
+         for (j = 0; j < CMAP_SIZE; j++) {
+            dmap[j].index = cp.palette[(j * 256) / CMAP_SIZE].index / 256.0;
             for (k = 0; k < 4; k++)
-               dmap[j].color[k] = (cp.palette[(j * 256) / cmap_size].color[k] * WHITE_LEVEL) * color_scalar;
+               dmap[j].color[k] = (cp.palette[(j * 256) / CMAP_SIZE].color[k] * WHITE_LEVEL) * color_scalar;
          }
 
          /* compute camera */
