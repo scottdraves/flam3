@@ -559,7 +559,7 @@ void apply_motion_parameters(flam3_xform *xf, flam3_xform *addto, double blend);
 EXPORT void flam3_interpolate(flam3_genome *genomes, int ngenomes, double time, double stagger, flam3_genome *result);
 
 /* print genome to given file with extra_attributes if not NULL */
-void flam3_print(FILE *f, flam3_genome *g, char *extra_attributes, int print_edits);
+EXPORT void flam3_print(FILE *f, flam3_genome *g, char *extra_attributes, int print_edits);
 void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, double *chaos_row, int motion_flag);
 EXPORT char *flam3_print_to_string(flam3_genome *cp);
 

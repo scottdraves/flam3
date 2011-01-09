@@ -28,6 +28,7 @@
 #include "parser.h"
 #include "filters.h"
 #include "palettes.h"
+#include "unistd.h"
 #include <limits.h>
 #include <locale.h>
 #include <math.h>
@@ -1617,7 +1618,31 @@ char *flam3_print_to_string(flam3_genome *cp) {
    long stringbytes;
    char *genome_string;
    
+   int using_tmpdir = 0;
+   char *tmp_path;
+   char tmpnam[256];
+   
    tmpflame = tmpfile();
+   if (NULL==tmpflame) {
+#ifdef _WIN32       
+       // This might be a permissions problem, so let's try to open a
+       // tempfile in the env var TEMP's area instead
+       tmp_path = getenv("TEMP");
+
+       if (tmp_path != NULL) {
+          strcpy(tmpnam, tmp_path);
+          strcat(tmpnam, "\\fr0st.tmp");
+          tmpflame = fopen(tmpnam, "w+");
+          if (tmpflame != NULL) {
+             using_tmpdir = 1;
+          }
+       }
+#endif
+       if (using_tmpdir == 0) {
+          perror("FLAM3: opening temporary file");
+          return (NULL);
+       }
+   }
    flam3_print(tmpflame,cp,NULL,flam3_dont_print_edits);
    stringbytes = ftell(tmpflame);
    fseek(tmpflame,0L, SEEK_SET);
@@ -1626,6 +1651,9 @@ char *flam3_print_to_string(flam3_genome *cp) {
        perror("FLAM3: reading string from temp file");
    }
    fclose(tmpflame);
+
+   if (using_tmpdir)
+      unlink(tmpnam);
    
    return(genome_string);
 }
