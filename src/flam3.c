@@ -28,12 +28,14 @@
 #include "parser.h"
 #include "filters.h"
 #include "palettes.h"
-#include "unistd.h"
 #include <limits.h>
 #include <locale.h>
 #include <math.h>
 #ifdef HAVE_STDINT_H
 #include <stdint.h>
+#endif
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
 #endif
 #include <errno.h>
 
