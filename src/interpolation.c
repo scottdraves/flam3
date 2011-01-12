@@ -367,6 +367,8 @@ void flam3_interpolate_n(flam3_genome *result, int ncp,
    
       for (i = 0; i < 256; i++) {
          double t[3], s[4];
+         int alpha1 = 1;
+
          s[0] = s[1] = s[2] = s[3] = s[4] = 0.0;
          
          for (k = 0; k < ncp; k++) {
@@ -375,9 +377,14 @@ void flam3_interpolate_n(flam3_genome *result, int ncp,
                s[j] += c[k] * t[j];
             
             s[3] += c[k] * cpi[k].palette[i].color[3];
+            if (cpi[k].palette[i].color[3] != 1.0)
+               alpha1 = 0;
             s[4] += c[k] * cpi[k].palette[i].index;
             
          }
+
+         if (alpha1 == 1)
+            s[3] = 1.0;
        
          hsv2rgb(s, result->palette[i].color);
          result->palette[i].color[3] = s[3];
