@@ -63,11 +63,12 @@ char *flam3_version() {
 
   if (strcmp(SVN_REV, "exported"))
     return flam3_os "-" VERSION "." SVN_REV;
-  return VERSION;
+  return flam3_os "-" VERSION;
 }
 
 
-#define CHOOSE_XFORM_GRAIN 10000
+#define CHOOSE_XFORM_GRAIN 16384
+#define CHOOSE_XFORM_GRAIN_M1 16383
 
 #define random_distrib(v) ((v)[random()%vlen(v)])
                                    
@@ -247,10 +248,11 @@ int flam3_iterate(flam3_genome *cp, int n, int fuse,  double *samples, unsigned 
 
    for (i = -4*fuse; i < 4*n; i+=4) {
    
+//         fn = xform_distrib[ lastxf*CHOOSE_XFORM_GRAIN + (((unsigned)irand(rc)) % CHOOSE_XFORM_GRAIN)];
       if (cp->chaos_enable)
-         fn = xform_distrib[ lastxf*CHOOSE_XFORM_GRAIN + (((unsigned)irand(rc)) % CHOOSE_XFORM_GRAIN)];
+         fn = xform_distrib[ lastxf*CHOOSE_XFORM_GRAIN + (((unsigned)irand(rc)) & CHOOSE_XFORM_GRAIN_M1)];
       else
-         fn = xform_distrib[ ((unsigned)irand(rc)) % CHOOSE_XFORM_GRAIN ];
+         fn = xform_distrib[ ((unsigned)irand(rc)) & CHOOSE_XFORM_GRAIN_M1 ];
       
       if (apply_xform(cp, fn, p, q, rc)>0) {
          consec ++;
@@ -1797,6 +1799,32 @@ void flam3_print(FILE *f, flam3_genome *cp, char *extra_attributes, int print_ed
 
    }
 
+   int hexpalette = argi("hexpalette",0);
+
+   if (hexpalette) {
+
+      fprintf(f,"   <palette count=\"256\" format=\"RGB\">");
+
+      for (i=0; i < 256; i++) {
+
+         int r, g, b;
+         r = rint(cp->palette[i].color[0] * 255.0);
+         g = rint(cp->palette[i].color[1] * 255.0);
+         b = rint(cp->palette[i].color[2] * 255.0);
+
+         if (i % 8 == 0) {
+            fprintf(f,"\n");
+            fprintf(f,"      ");
+         }
+
+         fprintf(f,"%2x%2x%2x",r,g,b);
+
+      }
+
+      fprintf(f,"\n");
+      fprintf(f,"   </palette>\n");
+
+   } else {
    for (i = 0; i < 256; i++) {
       double r, g, b, a;
       r = (cp->palette[i].color[0] * 255.0);
@@ -1804,8 +1832,7 @@ void flam3_print(FILE *f, flam3_genome *cp, char *extra_attributes, int print_ed
       b = (cp->palette[i].color[2] * 255.0);
       a = (cp->palette[i].color[3] * 255.0);
       
-//      if (i%4 == 0)
-         fprintf(f, "   ");
+      fprintf(f, "   ");
       
       if (flam27_flag || a==255.0) {
       
@@ -1830,6 +1857,7 @@ void flam3_print(FILE *f, flam3_genome *cp, char *extra_attributes, int print_ed
 //      if (i%4 == 3)
          fprintf(f, "\n");
          
+   }
    }
 
    if (cp->edits != NULL && print_edits==flam3_print_edits) {
@@ -3813,15 +3841,15 @@ double flam3_render_memory_required(flam3_frame *spec)
 {
   flam3_genome *cps = spec->genomes;
   int real_bits = spec->bits;
+  int real_bytes;
 
   if (33 == real_bits) real_bits = 32;
 
-  /* note 4 channels * 2 buffers cancels out 8 bits per byte */
-  /* does not yet include memory for density estimation filter */
+  real_bytes = real_bits / 8;
 
   return
     (double) cps[0].spatial_oversample * cps[0].spatial_oversample *
-    (double) cps[0].width * cps[0].height * real_bits;
+    (double) cps[0].width * cps[0].height * real_bytes * 9.0;
 }
 
 void bits_error(flam3_frame *spec) {
