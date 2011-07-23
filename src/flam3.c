@@ -2453,7 +2453,11 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
       for (nm=0; nm<x->num_motion; nm++)
          flam3_print_xform(f, &(x->motion[nm]), 0, 0, NULL, 1);
          
-      fprintf(f,"   </xform>\n");
+      if (final_flag)
+         fprintf(f,"   </finalxform>\n");
+      else
+         fprintf(f,"   </xform>\n");
+
    } else
       fprintf(f, "/>\n");
 }
