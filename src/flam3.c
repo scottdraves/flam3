@@ -2567,6 +2567,9 @@ void flam3_add_symmetry(flam3_genome *cp, int sym) {
    if (sym < 0) {
 
       i = cp->num_xforms;
+      if (cp->final_xform_enable)
+         i -= 1;
+
       flam3_add_xforms(cp,1,0,0);
 
       cp->xform[i].density = 1.0;
@@ -2592,6 +2595,9 @@ void flam3_add_symmetry(flam3_genome *cp, int sym) {
    for (k = 1; k < sym; k++) {
 
       i = cp->num_xforms;
+      if (cp->final_xform_enable)
+         i -= 1;
+
       flam3_add_xforms(cp, 1, 0,0);
 
       cp->xform[i].density = 1.0;
@@ -2662,8 +2668,13 @@ void flam3_cross(flam3_genome *cp0, flam3_genome *cp1, flam3_genome *out, int cr
          /* Default behavior keeps the final from parent0. */
          if (cp1->final_xform_index == j)		     
             continue;
+
+         i = out->num_xforms;
+         if (out->final_xform_enable)
+            i -= 1;
+
          flam3_add_xforms(out, 1, 0, 0);
-         flam3_copy_xform(&out->xform[out->num_xforms-1],&cp1->xform[j]);
+         flam3_copy_xform(&out->xform[i],&cp1->xform[j]);
       }
       
       /* Put the final xform last (if there is one) */
