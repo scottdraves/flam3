@@ -23,27 +23,6 @@
 
 #define DE_THRESH   100
 
-/* Spatial filter kernels */
-#define flam3_gaussian_kernel 0
-#define flam3_hermite_kernel 1
-#define flam3_box_kernel 2
-#define flam3_triangle_kernel 3
-#define flam3_bell_kernel 4
-#define flam3_b_spline_kernel 5
-#define flam3_lanczos3_kernel 6
-#define flam3_lanczos2_kernel 7
-#define flam3_mitchell_kernel 8
-#define flam3_blackman_kernel 9
-#define flam3_catrom_kernel 10
-#define flam3_hamming_kernel 11
-#define flam3_hanning_kernel 12
-#define flam3_quadratic_kernel 13
-
-/* Temporal filters */
-#define flam3_temporal_box 0
-#define flam3_temporal_gaussian 1
-#define flam3_temporal_exp 2
-
 typedef struct {
    int max_filtered_counts;
    int max_filter_index;
