@@ -366,7 +366,7 @@ void flam3_interpolate_n(flam3_genome *result, int ncp,
    if (flam3_palette_interpolation_hsv == cpi[0].palette_interpolation) {
    
       for (i = 0; i < 256; i++) {
-         double t[3], s[4];
+         double t[3], s[5];
          int alpha1 = 1;
 
          s[0] = s[1] = s[2] = s[3] = s[4] = 0.0;
