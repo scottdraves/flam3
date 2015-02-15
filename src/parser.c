@@ -341,6 +341,10 @@ int parse_flame_element(xmlNode *flame_node, flam3_genome *loc_current_cp) {
          cp->palette_interpolation = flam3_palette_interpolation_hsv;
      } else if  (!strcmp("sweep", att_str)) {
          cp->palette_interpolation = flam3_palette_interpolation_sweep;
+     } else if  (!strcmp("hsv2", att_str)) {
+         cp->palette_interpolation = flam3_palette_interpolation_hsv2;
+     } else if  (!strcmp("rgb", att_str)) {
+         cp->palette_interpolation = flam3_palette_interpolation_rgb;
      } else {
          fprintf(stderr, "warning: unrecognized palette interpolation type %s.\n", att_str);
      }

@@ -170,6 +170,15 @@ void interpolate_cmap(flam3_palette cmap, double blend,
       
       s[4] = p0[i].index;
       t[4] = p1[i].index;
+
+      /* take the shorter way around the hue circle */
+      if (0 == i) {
+	fprintf(stderr, "xxx interpolating between hues, %g %g\n", s[0], t[0]);
+      }
+      if ((s[0] - t[0]) > 3.0)
+	s[0] += 6.0;
+      if ((t[0] - s[0]) > 3.0)
+	t[0] += 6.0;
     
       for (j = 0; j < 5; j++)
          t[j] = ((1.0-blend) * s[j]) + (blend * t[j]);
@@ -362,17 +371,44 @@ double get_stagger_coef(double t, double stagger_prc, int num_xforms, int this_x
 void flam3_interpolate_n(flam3_genome *result, int ncp,
           flam3_genome *cpi, double *c, double stagger) {
    int i, j, k, numstd;
-   
-   if (flam3_palette_interpolation_hsv == cpi[0].palette_interpolation) {
+
+   fprintf(stderr, "xxx pi=%d\n", cpi[0].palette_interpolation);
+
+   if (flam3_palette_interpolation_sweep != cpi[0].palette_interpolation) {
    
       for (i = 0; i < 256; i++) {
          double t[3], s[5];
          int alpha1 = 1;
 
          s[0] = s[1] = s[2] = s[3] = s[4] = 0.0;
-         
+
          for (k = 0; k < ncp; k++) {
-            rgb2hsv(cpi[k].palette[i].color, t);
+	    if (i == 0) {
+	       fprintf(stderr, "ncp=%d, k=%d\n", ncp, k);
+	       fprintf(stderr, "rgb=%g %g %g\n", cpi[k].palette[i].color[0], cpi[k].palette[i].color[1], cpi[k].palette[i].color[2]);
+            }
+	    if (flam3_palette_interpolation_rgb != cpi[0].palette_interpolation)
+               rgb2hsv(cpi[k].palette[i].color, t);
+	    else {
+	      int l;
+	      for (l = 0; l < 3; l++)
+		t[l] = cpi[k].palette[i].color[l];
+            }
+	    if (i == 0) {
+	      fprintf(stderr, "hsv=%g %g %g\n", t[0], t[1], t[2]);
+            }
+
+	    if (2 == ncp && cpi[0].palette_interpolation == flam3_palette_interpolation_hsv2) {
+	      /* should also support blending between rgb and hsv,
+		 and change the color of the cut, so we can keep
+		 a dominant color but control what it is. */
+	      double z[3];
+	      rgb2hsv(cpi[1-k].palette[i].color, z);
+	      if ((z[0] - t[0]) > 3.0) t[0] += 6.0;
+	      if (i == 0)
+		fprintf(stderr, "adjusted %g %g\n", z[0], t[0]);
+	    }
+
             for (j = 0; j < 3; j++)
                s[j] += c[k] * t[j];
             
@@ -385,10 +421,25 @@ void flam3_interpolate_n(flam3_genome *result, int ncp,
 
          if (alpha1 == 1)
             s[3] = 1.0;
+
+	 if (i == 0)
+	   fprintf(stderr, "s0=%g\n", s[0]);
        
-         hsv2rgb(s, result->palette[i].color);
+	 if (flam3_palette_interpolation_rgb != cpi[0].palette_interpolation)
+            hsv2rgb(s, result->palette[i].color);
+	 else {
+	   int l;
+	   for (l = 0; l < 3; l++)
+	     result->palette[i].color[l] = s[l];
+	 }
          result->palette[i].color[3] = s[3];
          result->palette[i].index = s[4];
+
+	 if (i == 0)
+	   fprintf(stderr, "result rgb=%g %g %g\n",
+		   result->palette[0].color[0],
+		   result->palette[0].color[1],
+		   result->palette[0].color[2]);
        
          for (j = 0; j < 4; j++) {
             if (result->palette[i].color[j] < 0.0)
@@ -417,6 +468,7 @@ void flam3_interpolate_n(flam3_genome *result, int ncp,
    result->palette_mode = cpi[0].palette_mode;
 
    result->interpolation_type = cpi[0].interpolation_type;
+   result->palette_interpolation = cpi[0].palette_interpolation;
    INTERP(brightness);
    INTERP(contrast);
    INTERP(highlight_power);

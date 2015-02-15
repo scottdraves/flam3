@@ -51,6 +51,7 @@ void test_cp(flam3_genome *cp) {
    cp->spatial_oversample = 1;
    cp->spatial_filter_radius = 0.5;
    cp->spatial_filter_select = 0;
+   cp->highlight_power= 1.0;
    cp->zoom = 0.0;
    cp->sample_density = 1;
    cp->nbatches = 1;
@@ -60,7 +61,7 @@ void test_cp(flam3_genome *cp) {
    cp->estimator_curve = 0.6;
 }
 
-flam3_genome *string_to_cp(char *s, int *n) {
+flam3_genome *string_to_cp(char *s, int *n, int defaults) {
   flam3_genome *cp;
   FILE *fp;
 
@@ -69,7 +70,7 @@ flam3_genome *string_to_cp(char *s, int *n) {
     perror(s);
     exit(1);
   }
-  cp = flam3_parse_from_file(fp, s, flam3_defaults_on, n);
+  cp = flam3_parse_from_file(fp, s, defaults, n);
   if (NULL == cp) {
       fprintf(stderr, "could not read genome from %s.\n", s);
       exit(1);
@@ -89,6 +90,7 @@ xmlDocPtr create_new_editdoc(char *action, flam3_genome *parent0, flam3_genome *
    char *nick = getenv("nick");
    char *url = getenv("url");
    char *id = getenv("id");
+   char *gen = getenv("gen");
    char *comment = getenv("comment");
    int sheep_gen = argi("sheep_gen",-1);
    int sheep_id = argi("sheep_id",-1);
@@ -121,6 +123,10 @@ xmlDocPtr create_new_editdoc(char *action, flam3_genome *parent0, flam3_genome *
 
    if (id) {
       xmlNewProp(root_node, (const xmlChar *)"id", (const xmlChar *)id);
+   }
+
+   if (gen) {
+      xmlNewProp(root_node, (const xmlChar *)"gen", (const xmlChar *)gen);
    }
 
    /* action */
@@ -373,6 +379,58 @@ static double golden_bit(randctx *rc) {
   return flam3_random_isaac_bit(rc)?0.38196:0.61804;
 }
 
+static void print_find_parents(xmlNode *node, int last, int level) {
+  xmlAttrPtr att_ptr, cur_att;
+  xmlNodePtr chld_ptr=NULL, cur_chld=NULL;
+  xmlNode *this_node;
+  int i;
+  int next_last;
+  //for (i = 0; i < level; i++)
+  // fprintf(stdout, "+");
+  // fprintf(stdout, "pfp %d ", last);
+  for (this_node=node; this_node; this_node = this_node->next) {
+    if (this_node->type == XML_ELEMENT_NODE) {
+      // fprintf(stdout, "nname=%s ", this_node->name);
+      if (!xmlStrcmp(this_node->name, (const xmlChar *)"edit")) {
+	att_ptr = node->properties;
+	next_last = 0;
+	if (last) {
+	  char *pgen = NULL, *pid = NULL;
+	  for (cur_att = att_ptr; cur_att; cur_att = cur_att->next) {
+	    if (!xmlStrcmp(cur_att->name, (const xmlChar *)"gen")) {
+	      char *att_str = (char *) xmlGetProp(node,cur_att->name);
+	      pgen = att_str;
+	    }
+	    if (!xmlStrcmp(cur_att->name, (const xmlChar *)"id")) {
+	      char *att_str = (char *) xmlGetProp(node,cur_att->name);
+	      pid = att_str;
+	    }
+	  }
+	  if (pgen) printf("GEN=%s ", pgen);
+	  if (pid) printf("ID=%s", pid);
+	  if (pid || pgen)
+	    printf("\n");
+	} else {
+	  for (cur_att = att_ptr; cur_att; cur_att = cur_att->next) {
+	    char *att_str = (char *) xmlGetProp(node,cur_att->name);
+	    // fprintf(stdout, "name=%s val=%s ", cur_att->name, att_str);
+	    if (!xmlStrcmp(cur_att->name, (const xmlChar *)"action")) {
+	      if (!strncmp(att_str, "cross", 5) || !strncmp(att_str, "mutate", 6)) {
+		next_last = 1;
+	      }
+	    }
+	  }
+	  // fprintf(stdout, "\n");
+	  chld_ptr = node->children;
+	  for (cur_chld=chld_ptr; cur_chld; cur_chld = cur_chld->next)
+	    print_find_parents(cur_chld, next_last, level + 1);
+	}
+      }
+    }
+    return;
+  }
+}
+
 int
 main(argc, argv)
    int argc;
@@ -400,6 +458,7 @@ main(argc, argv)
    char *cross1 = getenv("cross1");
    char *method = getenv("method");
    char *inter = getenv("inter");
+   char *find_parents = getenv("find_parents");
    char *rotate = getenv("rotate");
    char *strip = getenv("strip");
    char *sequence = getenv("sequence");
@@ -599,7 +658,7 @@ main(argc, argv)
    if (getenv("template")) {
       char *tf = getenv("template");
 
-      templ = string_to_cp(tf, &ncp);
+      templ = string_to_cp(tf, &ncp, flam3_defaults_off);
       if (1 < ncp) {
          fprintf(stderr, "more than one control point in template, "
             "ignoring all but first.\n");
@@ -614,7 +673,7 @@ main(argc, argv)
 
    if (clone_all) {
 
-      cp = string_to_cp(clone_all, &ncp);
+     cp = string_to_cp(clone_all, &ncp, flam3_defaults_on);
 
       printf("<clone_all version=\"FLAM3-%s\">\n", flam3_version());
       for (i = 0; i < ncp; i++) {
@@ -632,7 +691,7 @@ main(argc, argv)
       int first_frame,last_frame;
       int ftime,iscp;
       double stagger = argf("stagger", 0.0);
-      cp = string_to_cp(animate, &ncp);
+      cp = string_to_cp(animate, &ncp, flam3_defaults_on);
       
       
       for (i = 0; i < ncp; i++) {
@@ -698,7 +757,7 @@ main(argc, argv)
          exit(1);
       }
 
-      cp = string_to_cp(sequence, &ncp);
+      cp = string_to_cp(sequence, &ncp, flam3_defaults_on);
 
       if (enclosed) printf("<sequence version=\"FLAM3-%s\">\n", flam3_version());
       spread = 1.0/nframes;
@@ -762,7 +821,7 @@ main(argc, argv)
       blend = frame/(double)nframes;
       spread = 1.0/nframes;
 
-      cp = string_to_cp(fname, &ncp);
+      cp = string_to_cp(fname, &ncp, flam3_defaults_on);
 
       if (enclosed) printf("<pick version=\"FLAM3-%s\">\n", flam3_version());
       if (rotate) {
@@ -795,7 +854,7 @@ main(argc, argv)
 
    if (strip) {
 
-      cp = string_to_cp(strip, &ncp);
+     cp = string_to_cp(strip, &ncp, flam3_defaults_on);
 
       if (enclosed) printf("<pick version=\"FLAM3-%s\">\n", flam3_version());
 
@@ -823,6 +882,18 @@ main(argc, argv)
       exit(0);
    }
 
+   if (find_parents) {
+     cp = string_to_cp(find_parents, &ncp, flam3_defaults_on);
+     if (1 != ncp) {
+       fprintf(stderr, "can only find parents of one genome\n");
+       exit(1);
+     }
+     xmlDocPtr edits = cp[0].edits;
+     xmlNode *rootnode = xmlDocGetRootElement(edits);
+     print_find_parents(rootnode, 0, 0);
+     exit(0);
+   }
+
    /* pick a control point until it looks good enough */
    if (repeat <= 0) {
      fprintf(stderr, "repeat must be positive, not %d.\n", repeat);
@@ -841,7 +912,7 @@ main(argc, argv)
 
       if (clone) {
 
-         parent0 = string_to_cp(clone, &parent0_n);
+	parent0 = string_to_cp(clone, &parent0_n, flam3_defaults_on);
          /* Action is 'clone' with trunc_vars concat */
          sprintf(action,"clone");
          
@@ -871,7 +942,7 @@ main(argc, argv)
             if (mutate) {
                int mutmeth;
 
-               parent0 = string_to_cp(mutate, &parent0_n);
+               parent0 = string_to_cp(mutate, &parent0_n, flam3_defaults_on);
                flam3_copy(&selp0, &(parent0[((unsigned)irand(&f.rc))%parent0_n]));
                flam3_copy(&cp_orig, &selp0);
                aselp0 = &selp0;
@@ -914,8 +985,8 @@ main(argc, argv)
                int i0, i1;
                int crossmeth;
 
-               parent0 = string_to_cp(cross0, &parent0_n);
-               parent1 = string_to_cp(cross1, &parent1_n);
+               parent0 = string_to_cp(cross0, &parent0_n, flam3_defaults_on);
+               parent1 = string_to_cp(cross1, &parent1_n, flam3_defaults_on);
 
                i0 = ((unsigned)irand(&f.rc))%parent0_n;
                i1 = ((unsigned)irand(&f.rc))%parent1_n;

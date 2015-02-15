@@ -480,6 +480,8 @@ flam3_genome *sheep_edge(flam3_genome *cp, double blend, int seqflag, double sta
       flam3_rotate(&spun[0], blend*360.0, spun[0].interpolation_type);
       flam3_rotate(&spun[1], blend*360.0, spun[0].interpolation_type);
 
+      fprintf(stderr, "xyzzy %d %d\n", spun[0].palette_interpolation, spun[1].palette_interpolation);
+
       /* Now call the interpolation */
       if (argi("unsmoother",0) == 0)
          flam3_interpolate(spun, 2, smoother(blend), stagger, result);
@@ -1580,7 +1582,8 @@ void flam3_apply_template(flam3_genome *cp, flam3_genome *templ) {
       cp->ntemporal_samples = templ->ntemporal_samples;
    if (templ->width > 0) {
       /* preserving scale should be an option */
-      cp->pixels_per_unit = cp->pixels_per_unit * templ->width / cp->width;
+      // cp->pixels_per_unit = cp->pixels_per_unit * templ->width / cp->width;
+      cp->pixels_per_unit = cp->pixels_per_unit * templ->height / cp->height;
       cp->width = templ->width;
    }
    if (templ->height > 0)
@@ -1613,6 +1616,8 @@ void flam3_apply_template(flam3_genome *cp, flam3_genome *templ) {
       cp->highlight_power = templ->highlight_power;
    if (templ->palette_mode >= 0)
       cp->palette_mode = templ->palette_mode;
+   if (templ->palette_interpolation >= 0)
+      cp->palette_interpolation = templ->palette_interpolation;
 
 }
 
@@ -1777,8 +1782,12 @@ void flam3_print(FILE *f, flam3_genome *cp, char *extra_attributes, int print_ed
        fprintf(f, " interpolation_type=\"older\"");
 
 
-   if (flam3_palette_interpolation_hsv != cp->palette_interpolation)
+   if (flam3_palette_interpolation_sweep == cp->palette_interpolation)
        fprintf(f, " palette_interpolation=\"sweep\"");
+   else if (flam3_palette_interpolation_rgb == cp->palette_interpolation)
+       fprintf(f, " palette_interpolation=\"rgb\"");
+   else if (flam3_palette_interpolation_hsv2 == cp->palette_interpolation)
+       fprintf(f, " palette_interpolation=\"hsv2\"");
 
    if (extra_attributes)
       fprintf(f, " %s", extra_attributes);
@@ -1930,6 +1939,7 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
 
    for (j = 0; j < lnv; j++) {
       double v = x->var[j];
+      if (j == VAR_TWINTRIAN) continue;
       if (0.0 != v) {
          fprintf(f, "%s=\"%g\" ", flam3_variation_names[j], v);
          if (j==VAR_BLOB)
