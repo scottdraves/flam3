@@ -118,7 +118,7 @@ int main(int argc, char **argv) {
    double imgmem;
    unsigned int strip;
    double center_y, center_base;
-   unsigned int nstrips;
+   unsigned int nstrips = 1;
    randctx savectx;
    char *prefix = args("prefix", "");
    char *out = args("out", NULL);
@@ -126,7 +126,6 @@ int main(int argc, char **argv) {
    int verbose = argi("verbose", 1);
    int bits = argi("bits", 33);
    int bpc = argi("bpc",8);
-   int seed = argi("seed", 0);
    int transparency = argi("transparency", 0);
    char *inf = getenv("in");
    double qs = argf("qs", 1.0);
@@ -248,7 +247,6 @@ int main(int argc, char **argv) {
       fprintf(stderr, "hqi-flame: warning: writing multiple images "
       "to one file.  all but last will be lost.\n");
    }
-
 
    for (i = 0; i < ncps; i++) {
       int real_height;

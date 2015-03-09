@@ -102,7 +102,6 @@ write_jpeg(FILE *file, unsigned char *image, int width, int height, flam3_img_co
 unsigned char *read_jpeg(FILE *ifp, int *width, int *height) {
     struct jpeg_decompress_struct cinfo;
     struct jpeg_error_mgr jerr;
-    int num_scanlines;
     unsigned char *p, *q, *t;
 
     cinfo.err = jpeg_std_error(&jerr);
@@ -126,7 +125,7 @@ unsigned char *read_jpeg(FILE *ifp, int *width, int *height) {
     while (cinfo.output_scanline < cinfo.output_height) {
 	unsigned char *s = t;
 	int i;
-	num_scanlines = jpeg_read_scanlines(&cinfo, &t, 1);
+	jpeg_read_scanlines(&cinfo, &t, 1);
 	for (i = 0; i < *width; i++) {
 	    p[0] = s[0];
 	    p[1] = s[1];

@@ -71,9 +71,9 @@ void tokenize(ss, argv, argc)
 void parse_control_point_old(char **ss, flam3_genome *cp) {
    char *argv[MAXARGS];
    int argc, i, j;
-   int set_cm = 0, set_image_size = 0, set_nbatches = 0, set_white_level = 0, set_cmap_inter = 0;
+   int set_cm = 0, set_image_size = 0, set_nbatches = 0, set_white_level = 0;
    int set_spatial_oversample = 0, set_hr = 0;
-   double *slot, xf, cm, t, nbatches, white_level, spatial_oversample, cmap_inter;
+   double *slot = NULL, xf, cm, t, nbatches, white_level, spatial_oversample, cmap_inter;
    double image_size[2];
 
    memset(cp, 0, sizeof(flam3_genome));
@@ -153,7 +153,6 @@ void parse_control_point_old(char **ss, flam3_genome *cp) {
 	 slot = cp->xform[(int)xf].var;
       else if (streql("cmap_inter", argv[i])) {
 	slot = &cmap_inter;
-	set_cmap_inter = 1;
       } else
 	 *slot++ = atof(argv[i]);
    }
