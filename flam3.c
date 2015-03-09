@@ -1628,7 +1628,6 @@ char *flam3_print_to_string(flam3_genome *cp) {
    char *genome_string;
    
    int using_tmpdir = 0;
-   char *tmp_path;
    char tmpnam[256];
    
    tmpflame = tmpfile();
@@ -2650,7 +2649,7 @@ void add_to_action(char *action, char *addtoaction) {
 
 void flam3_cross(flam3_genome *cp0, flam3_genome *cp1, flam3_genome *out, int cross_mode, randctx *rc, char *action) {
 
-   int i0,i1, i,j, rb;
+   int i,j, rb;
    char ministr[10];   
 
    if (cross_mode == CROSS_NOT_SPECIFIED) {
@@ -3064,7 +3063,7 @@ static int random_varn(int n) {
 
 void flam3_random(flam3_genome *cp, int *ivars, int ivars_n, int sym, int spec_xforms) {
 
-   int i, j, nxforms, var, samed, multid, samepost, postid, addfinal=0;
+   int i, nxforms, var, samed, multid, samepost, postid, addfinal=0;
    int finum = -1;
    int n;
    char *ai;

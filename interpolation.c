@@ -513,7 +513,7 @@ void flam3_interpolate_n(flam3_genome *result, int ncp,
    /* Interpolate each xform */
    for (i = 0; i < cpi[0].num_xforms; i++) {
    
-      double csave[2];     
+      double csave[2] = {0, 0};     
       double td;
       int all_id;
       int nx = cpi[0].num_xforms-(cpi[0].final_xform_index>=0);

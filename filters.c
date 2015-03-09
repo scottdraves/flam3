@@ -197,7 +197,7 @@ double flam3_spatial_filter(int knum, double x) {
       return flam3_lanczos3_filter(x)*flam3_sinc(x/3.0);   
    else if (knum==12)
       return flam3_lanczos2_filter(x)*flam3_sinc(x/2.0);
-   else if (knum==13)
+   else  // if (knum==13)
       return flam3_quadratic_filter(x);
 }
 

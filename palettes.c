@@ -26,7 +26,7 @@ static void parse_palettes(xmlNode *node) {
    xmlAttrPtr attr;
    char *val;
    lib_palette *pal;
-   int hex_error;
+   int hex_error = 0;
     
    while (node) {
       if (node->type == XML_ELEMENT_NODE && !xmlStrcmp(node->name, (const xmlChar *)"palette")) {

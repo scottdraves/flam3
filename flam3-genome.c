@@ -383,7 +383,6 @@ static void print_find_parents(xmlNode *node, int last, int level) {
   xmlAttrPtr att_ptr, cur_att;
   xmlNodePtr chld_ptr=NULL, cur_chld=NULL;
   xmlNode *this_node;
-  int i;
   int next_last;
   //for (i = 0; i < level; i++)
   // fprintf(stdout, "+");
@@ -748,7 +747,7 @@ main(argc, argv)
 
 
    if (sequence) {
-      double blend, spread;
+      double blend;
       int seqflag;
       int framecount;
 
@@ -760,7 +759,6 @@ main(argc, argv)
       cp = string_to_cp(sequence, &ncp, flam3_defaults_on);
 
       if (enclosed) printf("<sequence version=\"FLAM3-%s\">\n", flam3_version());
-      spread = 1.0/nframes;
       framecount = 0;
 #if 1
       for (i = 0; i < ncp; i++) {

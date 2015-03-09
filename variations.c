@@ -1916,9 +1916,6 @@ void var97_flux (flam3_iter_helper *f, double weight) {
     double avgr = weight * (2 + f->xform->flux_spread) * sqrt( sqrt(f->ty*f->ty + xpw*xpw) / sqrt(f->ty*f->ty + xmw*xmw));
     double avga = ( atan2(f->ty, xmw) - atan2(f->ty,xpw) ) * 0.5;
 
-    double s = sin(avga);
-    double c = cos(avga);
-
     f->p0 += avgr * cos(avga);
     f->p1 += avgr * sin(avga);
 }
@@ -2133,7 +2130,7 @@ int apply_xform(flam3_genome *cp, int fn, double *p, double *q, randctx *rc)
 {
    flam3_iter_helper f;
    int var_n;
-   double next_color,s,s1;
+   double s1;
    double weight;
 
    f.rc = rc;
