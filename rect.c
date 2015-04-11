@@ -561,7 +561,6 @@ static int render_rectangle(flam3_frame *spec, void *out,
    pthread_attr_t pt_attr;
    pthread_t *myThreads=NULL;
 #endif
-   int thread_status;
    int thi;
    time_t tstart,tend;   
    double sumfilt;
@@ -902,7 +901,7 @@ static int render_rectangle(flam3_frame *spec, void *out,
 
          /* Wait for them to return */
          for (thi=0; thi < spec->nthreads; thi++)
-            pthread_join(myThreads[thi], (void **)&thread_status);
+            pthread_join(myThreads[thi], NULL);
 
          #if defined(USE_LOCKS)
          pthread_mutex_destroy(&fic.bucket_mutex);
@@ -1033,7 +1032,7 @@ static int render_rectangle(flam3_frame *spec, void *out,
 
          /* Wait for them to return */
          for (thi=0; thi < spec->nthreads; thi++)
-            pthread_join(myThreads[thi], (void **)&thread_status);
+            pthread_join(myThreads[thi], NULL);
          
          free(myThreads);            
 #else         

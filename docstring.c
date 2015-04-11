@@ -98,6 +98,7 @@ static char *the_docstring1 =
 "write_genome    0           write out genome associated with center of motion blur window (animate only)\n"
 "noedits         unset       omit edit tags from output (genome only)\n"
 "print_edit_depth 0          depth to truncate <edit> tag structure.  0 prints all <edit> tags (genome only)\n"
+"flam3_palettes  unset       location of flam3-palettes.xml if not at default install location\n"
 "intpalette      unset       round palette entries for importing into older Apophysis versions (genome only)\n"
 "insert_palette  unset       insert the palette into the image.\n"
 "enable_jpeg_comments   1    enables comments in the jpeg header (render and animate)\n"
