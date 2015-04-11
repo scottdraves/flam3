@@ -75,7 +75,7 @@ extern char *flam3_variation_names[];
 #define flam3_palette_interpolation_hsv   0
 #define flam3_palette_interpolation_sweep 1
 #define flam3_palette_interpolation_rgb   2
-#define flam3_palette_interpolation_hsv2  3
+#define flam3_palette_interpolation_hsv_circular  3
 
 #define flam3_max_action_length 10000
 

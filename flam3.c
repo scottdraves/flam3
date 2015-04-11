@@ -1281,7 +1281,7 @@ void clear_cp(flam3_genome *cp, int default_flag) {
     cp->rotate = 0.0;
     cp->pixels_per_unit = 50;
     cp->interpolation = flam3_interpolation_linear;
-    cp->palette_interpolation = flam3_palette_interpolation_hsv;
+    cp->palette_interpolation = flam3_palette_interpolation_hsv_circular;
 
     cp->genome_index = 0;
     memset(cp->parent_fname,0,flam3_parent_fn_len);

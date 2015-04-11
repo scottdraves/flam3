@@ -400,7 +400,7 @@ void flam3_interpolate_n(flam3_genome *result, int ncp,
 //	      fprintf(stderr, "hsv=%g %g %g\n", t[0], t[1], t[2]);
 //            }
 
-	    if (2 == ncp && k == 0 &&cpi[0].palette_interpolation == flam3_palette_interpolation_hsv2) {
+	    if (2 == ncp && k == 0 &&cpi[0].palette_interpolation == flam3_palette_interpolation_hsv_circular) {
 	      /* should also support blending between rgb and hsv,
 		 and change the color of the cut, so we can keep
 		 a dominant color but control what it is. */
