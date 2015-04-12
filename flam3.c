@@ -480,7 +480,7 @@ flam3_genome *sheep_edge(flam3_genome *cp, double blend, int seqflag, double sta
       flam3_rotate(&spun[0], blend*360.0, spun[0].interpolation_type);
       flam3_rotate(&spun[1], blend*360.0, spun[0].interpolation_type);
 
-      fprintf(stderr, "xyzzy %d %d\n", spun[0].palette_interpolation, spun[1].palette_interpolation);
+      //fprintf(stderr, "xyzzy %d %d\n", spun[0].palette_interpolation, spun[1].palette_interpolation);
 
       /* Now call the interpolation */
       if (argi("unsmoother",0) == 0)
@@ -1281,7 +1281,7 @@ void clear_cp(flam3_genome *cp, int default_flag) {
     cp->rotate = 0.0;
     cp->pixels_per_unit = 50;
     cp->interpolation = flam3_interpolation_linear;
-    cp->palette_interpolation = flam3_palette_interpolation_hsv;
+    cp->palette_interpolation = flam3_palette_interpolation_hsv_circular;
 
     cp->genome_index = 0;
     memset(cp->parent_fname,0,flam3_parent_fn_len);
