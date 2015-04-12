@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS = foreign no-dependencies
 
-GIT_DEF = -D'GIT_REV="$(shell git describe --tags)"'
+GIT_DEF = -D'GIT_REV="$(shell git describe --tags --dirty)"'
 AM_CFLAGS = -g -O3 -std=gnu99 -ffast-math -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" $(GIT_DEF)
 
 ACLOCAL_AMFLAGS = -I m4

@@ -359,7 +359,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AUTOMAKE_OPTIONS = foreign no-dependencies
-GIT_DEF = -D'GIT_REV="$(shell git describe --tags)"'
+GIT_DEF = -D'GIT_REV="$(shell git describe --tags --dirty)"'
 AM_CFLAGS = -g -O3 -std=gnu99 -ffast-math -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" $(GIT_DEF)
 ACLOCAL_AMFLAGS = -I m4
 man1_MANS = flam3-animate.man flam3-genome.man flam3-render.man flam3-convert.man
