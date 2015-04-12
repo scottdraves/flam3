@@ -178,7 +178,7 @@ void interpolate_cmap(flam3_palette cmap, double blend,
       
       /* Correct the first hue to go the short way around */
       if ((s[0] - t[0]) > 3.0)  /* first hue much bigger than second hue */
-        s[0] -= 6.0
+        s[0] -= 6.0;
       if ((s[0] - t[0]) < -3.0)  /* first hue much smaller than second hue */
 	s[0] += 6.0;
     
