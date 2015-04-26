@@ -1785,6 +1785,8 @@ void flam3_print(FILE *f, flam3_genome *cp, char *extra_attributes, int print_ed
        fprintf(f, " palette_interpolation=\"sweep\"");
    else if (flam3_palette_interpolation_rgb == cp->palette_interpolation)
        fprintf(f, " palette_interpolation=\"rgb\"");
+   else if (flam3_palette_interpolation_hsv == cp->palette_interpolation)
+       fprintf(f, " palette_interpolation=\"hsv\"");
    else if (flam3_palette_interpolation_hsv_circular == cp->palette_interpolation)
        fprintf(f, " palette_interpolation=\"hsv_circular\"");
 
