@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS = foreign no-dependencies
 
-SVN_DEF = -D'SVN_REV="$(shell svnversion -n .)"'
-AM_CFLAGS = -g -O3 -std=gnu99 -ffast-math -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" $(SVN_DEF)
+GIT_DEF = -D'GIT_REV="$(shell git describe --tags --dirty)"'
+AM_CFLAGS = -g -O3 -std=gnu99 -ffast-math -DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" $(GIT_DEF)
 
 ACLOCAL_AMFLAGS = -I m4
 
