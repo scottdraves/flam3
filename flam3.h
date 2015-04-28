@@ -453,6 +453,7 @@ typedef struct {
    int interpolation;
    int interpolation_type;
    int palette_interpolation;
+   double hsv_rgb_palette_blend;
    int num_xforms;
    int final_xform_index;
    int final_xform_enable;

@@ -785,7 +785,8 @@ void flam3_interpolate(flam3_genome cps[], int ncps,
    result->time = time;
    result->interpolation = flam3_interpolation_linear;
    result->interpolation_type = cpi[0].interpolation_type;
-   result->palette_interpolation = flam3_palette_interpolation_hsv;
+   result->palette_interpolation = flam3_palette_interpolation_hsv_circular;
+   result->hsv_rgb_palette_blend = 0.0;
 
    if (!smoothflag) {
        flam3_interpolate_n(result, 2, cpi, c, stagger);
@@ -1282,6 +1283,7 @@ void clear_cp(flam3_genome *cp, int default_flag) {
     cp->pixels_per_unit = 50;
     cp->interpolation = flam3_interpolation_linear;
     cp->palette_interpolation = flam3_palette_interpolation_hsv_circular;
+    cp->hsv_rgb_palette_blend = 0.0;
 
     cp->genome_index = 0;
     memset(cp->parent_fname,0,flam3_parent_fn_len);
@@ -1618,6 +1620,8 @@ void flam3_apply_template(flam3_genome *cp, flam3_genome *templ) {
       cp->palette_mode = templ->palette_mode;
    if (templ->palette_interpolation >= 0)
       cp->palette_interpolation = templ->palette_interpolation;
+   if (templ->hsv_rgb_palette_blend >= 0)
+      cp->hsv_rgb_palette_blend = templ->hsv_rgb_palette_blend;
 
 }
 
@@ -1787,8 +1791,11 @@ void flam3_print(FILE *f, flam3_genome *cp, char *extra_attributes, int print_ed
        fprintf(f, " palette_interpolation=\"rgb\"");
    else if (flam3_palette_interpolation_hsv == cp->palette_interpolation)
        fprintf(f, " palette_interpolation=\"hsv\"");
-   else if (flam3_palette_interpolation_hsv_circular == cp->palette_interpolation)
+   else if (flam3_palette_interpolation_hsv_circular == cp->palette_interpolation) {
        fprintf(f, " palette_interpolation=\"hsv_circular\"");
+       if (cp->hsv_rgb_palette_blend > 0.0)
+           fprintf(f, " hsv_rgb_palette_blend=\"%g\"", cp->hsv_rgb_palette_blend);
+   }
 
    if (extra_attributes)
       fprintf(f, " %s", extra_attributes);
@@ -3089,7 +3096,8 @@ void flam3_random(flam3_genome *cp, int *ivars, int ivars_n, int sym, int spec_x
       fprintf(stderr,"error getting palette from xml file, setting to all white\n");
    cp->time = 0.0;
    cp->interpolation = flam3_interpolation_linear;
-   cp->palette_interpolation = flam3_palette_interpolation_hsv;
+   cp->palette_interpolation = flam3_palette_interpolation_hsv_circular;
+   cp->hsv_rgb_palette_blend = 0.0;
 
    /* Choose the number of xforms */
    if (spec_xforms>0) {

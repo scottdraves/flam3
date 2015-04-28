@@ -332,6 +332,8 @@ int parse_flame_element(xmlNode *flame_node, flam3_genome *loc_current_cp) {
       /* Compare attribute names */
       if (!xmlStrcmp(cur_att->name, (const xmlChar *)"time")) {
          cp->time = flam3_atof(att_str);
+      } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"hsv_rgb_palette_blend")) {
+         cp->hsv_rgb_palette_blend = flam3_atof(att_str);
       } else if (!xmlStrcmp(cur_att->name, (const xmlChar *)"interpolation")) {
      if (!strcmp("linear", att_str)) {
          cp->interpolation = flam3_interpolation_linear;

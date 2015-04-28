@@ -39,6 +39,7 @@ void test_cp(flam3_genome *cp) {
    cp->time = 0.0;
    cp->interpolation = flam3_interpolation_linear;
    cp->palette_interpolation = flam3_palette_interpolation_hsv;
+   cp->hsv_rgb_palette_blend = 0.0;
    cp->background[0] = 0.0;
    cp->background[1] = 0.0;
    cp->background[2] = 0.0;
@@ -248,7 +249,8 @@ void spin(int frame, double blend, flam3_genome *parent, flam3_genome *templ)
    /* Set genome parameters accordingly */
    result->time = (double)frame;
    result->interpolation = flam3_interpolation_linear;
-   result->palette_interpolation = flam3_palette_interpolation_hsv;
+   result->palette_interpolation = flam3_palette_interpolation_hsv_circular;
+   result->hsv_rgb_palette_blend = 0.0;
 
    /* Force linear interpolation - unsure if this is still necessary     */
    /* I believe we put this in so that older clients could render frames */
