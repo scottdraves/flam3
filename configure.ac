@@ -5,7 +5,7 @@ AC_INIT(flam3-animate.c)
 AM_CONFIG_HEADER(config.h)
 AC_ARG_ENABLE(pthread, [  --enable-pthread        compile FLAM3 with threads enabled (default=yes)])
 AC_ARG_ENABLE(atomic_ops, [  --enable-atomic-ops     compile FLAM3 with atom ops enabled (default=yes, independently checks for 32 and 64 bit sizes)])
-AM_INIT_AUTOMAKE(flam3,"3.0.1")
+AM_INIT_AUTOMAKE(flam3,"3.0.2")
 
 AC_CONFIG_MACRO_DIR([m4])
 

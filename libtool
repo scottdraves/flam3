@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # libtool - Provide generalized library-building support services.
-# Generated automatically by config.status (flam3) 3.0.1
+# Generated automatically by config.status (flam3) 3.0.2
 # Libtool was configured on host nuc:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 #
@@ -86,7 +86,7 @@ NM="/usr/bin/nm -B"
 LN_S="ln -s"
 
 # What is the maximum length of a command?
-max_cmd_len=1635000
+max_cmd_len=3458764513820540925
 
 # Object file suffix (normally "o").
 objext=o

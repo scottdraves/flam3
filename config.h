@@ -84,7 +84,7 @@
 #define TIME_WITH_SYS_TIME 1
 
 /* Version number of package */
-#define VERSION "3.0.1"
+#define VERSION "3.0.2"
 
 /* Define to empty if `const' does not conform to ANSI C. */
 /* #undef const */

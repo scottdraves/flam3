@@ -62,7 +62,7 @@
 char *flam3_version() {
 
   if (strcmp(GIT_REV, ""))
-    return flam3_os "-" VERSION "." GIT_REV;
+    return flam3_os "-" GIT_REV;
   return flam3_os "-" VERSION;
 }
 
