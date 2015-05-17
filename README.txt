@@ -315,6 +315,9 @@ todo:  eliminate all static storage.
 
 changelog:
 
+5/17/15 Added hsv_circular and hsv_rgb_palette_blend.  Improved
+   edit history of genetic algorithm.  Release as 3.0.2.
+
 12/29/10 Added --version option to flam3-genome.  fixed bug in 16 bpc
    png image writing when using strips.  xform opacity now affects
    calculated width of density estimation filters.  Release as 3.0.1.
