@@ -317,7 +317,7 @@ changelog:
 
 5/17/15 Added hsv_circular and hsv_rgb_palette_blend.  Improved
    edit history of genetic algorithm (keep track of generation).
-   Add find_parents operator to flam3-genome.  Release as 3.0.2.
+   Add find_parents operator to flam3-genome.  Release as 3.1.0.
 
 12/29/10 Added --version option to flam3-genome.  fixed bug in 16 bpc
    png image writing when using strips.  xform opacity now affects
