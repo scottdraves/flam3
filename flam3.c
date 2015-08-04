@@ -1639,7 +1639,7 @@ char *flam3_print_to_string(flam3_genome *cp) {
 #ifdef _WIN32       
        // This might be a permissions problem, so let's try to open a
        // tempfile in the env var TEMP's area instead
-       tmp_path = getenv("TEMP");
+       char* tmp_path = getenv("TEMP");
 
        if (tmp_path != NULL) {
           strcpy(tmpnam, tmp_path);
