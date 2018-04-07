@@ -1,6 +1,6 @@
 #! /bin/bash
 # Generated automatically by config.status (flam3) 3.1.1
-# Libtool was configured on host localhost:
+# Libtool was configured on host prometheus:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.
