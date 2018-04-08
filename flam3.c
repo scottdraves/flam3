@@ -1937,7 +1937,7 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
    
    if (flam27_flag)
       fprintf(f, "symmetry=\"%g\" ", 1.0-2.0*x->color_speed);
-   else if (!motion_flag)   
+   else if (!motion_flag || x->color_speed != 0.0)
       fprintf(f, "color_speed=\"%g\" ", x->color_speed);
    
    if (!final_flag && !motion_flag && !flam27_flag)
