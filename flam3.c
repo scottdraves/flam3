@@ -570,8 +570,8 @@ void apply_motion_parameters(flam3_xform *xf, flam3_xform *addto, double blend) 
    /* Loop over the motion elements and add their contribution to the original vals */
    for (i=0; i<xf->num_motion; i++) {   
    
-      freq = mot[i]->motion_freq;
-      func = mot[i]->motion_func;
+      freq = mot[i].motion_freq;
+      func = mot[i].motion_func;
       
       APPMOT(density); /* Must ensure > 0 after all is applied */
       APPMOT(color); /* Must ensure [0,1] after all is applied */
