@@ -570,8 +570,8 @@ void apply_motion_parameters(flam3_xform *xf, flam3_xform *addto, double blend) 
    /* Loop over the motion elements and add their contribution to the original vals */
    for (i=0; i<xf->num_motion; i++) {   
    
-      freq = mot->motion_freq;
-      func = mot->motion_func;
+      freq = mot[i]->motion_freq;
+      func = mot[i]->motion_func;
       
       APPMOT(density); /* Must ensure > 0 after all is applied */
       APPMOT(color); /* Must ensure [0,1] after all is applied */
@@ -1937,7 +1937,7 @@ void flam3_print_xform(FILE *f, flam3_xform *x, int final_flag, int numstd, doub
    
    if (flam27_flag)
       fprintf(f, "symmetry=\"%g\" ", 1.0-2.0*x->color_speed);
-   else if (!motion_flag)   
+   else if (!motion_flag || x->color_speed != 0.0)
       fprintf(f, "color_speed=\"%g\" ", x->color_speed);
    
    if (!final_flag && !motion_flag && !flam27_flag)
