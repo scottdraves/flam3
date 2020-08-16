@@ -1,5 +1,9 @@
 FLAM3 - cosmic recursive fractal flames
-see the file COPYING for the license covering this software.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
 This is free software to render fractal flames as described on
 http://flam3.com.  Flam3-animate makes animations, and flam3-render
