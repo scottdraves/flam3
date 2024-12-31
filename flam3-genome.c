@@ -1131,7 +1131,7 @@ main(argc, argv)
          if (maxforms && atoi(maxforms)) {
             cp_save.symmetry = 0;
             while (cp_save.num_xforms > atoi(maxforms))
-               flam3_delete_xform(&cp_save, cp_save.num_xforms - 1);
+		flam3_delete_xform(&cp_save, 0);
          }
       }
 
