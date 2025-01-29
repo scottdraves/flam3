@@ -28,6 +28,8 @@ AC_CHECK_LIB([z],[deflateInit_],,[AC_MSG_ERROR([zlib is required.])])
 AC_CHECK_LIB([png],[png_write_image],,[AC_MSG_ERROR([The png library is required.])])
 AC_CHECK_LIB([xml2],[xmlParseFile],,[AC_MSG_ERROR([The xml2 library is required.])])
 
+AC_CHECK_LIBM
+AC_SUBST([LIBM])
 
 if test "${enable_atomic_ops}" = "" ; then
   enable_atomic_ops=yes
