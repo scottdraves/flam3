@@ -1,9 +1,9 @@
 .TH flam3-animate 1 "" ""
 .SH NAME
-flam3-animate
-flam3-render
-flam3-genome
-flam3-convert - render and animate FLAM3s and manipulate their genomes
+flam3-animate \- render and animate FLAM3s and manipulate their genomes
+flam3-render \- render and animate FLAM3s and manipulate their genomes
+flam3-genome \- render and animate FLAM3s and manipulate their genomes
+flam3-convert \- render and animate FLAM3s and manipulate their genomes
 .SH SYNOPSIS
 .B flam3-render < input
 
@@ -25,7 +25,7 @@ documentation to standard out.
 
 .SH ENVIRONMENT
 
-The environment variables are in the documention written to standard
+The environment variables are in the documentation written to standard
 out given any command line option.
 
 .SH SEE ALSO
