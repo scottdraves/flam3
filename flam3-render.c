@@ -117,6 +117,7 @@ int main(int argc, char **argv) {
    size_t this_size, last_size = -1;
    double imgmem;
    unsigned int strip;
+   int strip_to_render  = argi("strip", -1);
    double center_y, center_base;
    unsigned int nstrips = 1;
    randctx savectx;
@@ -135,6 +136,8 @@ int main(int argc, char **argv) {
    int name_enable = argi("name_enable",0);
    int num_threads = argi("nthreads",0);
    int earlyclip = argi("earlyclip",0);
+   int minstrip = argi("minstrip", -1);
+   int maxstrip = argi("maxstrip", -1);
    FILE *in;
    double zoom_scale;
    unsigned int channels;
@@ -319,7 +322,30 @@ int main(int argc, char **argv) {
       /* Copy off random context to use for each strip */
       memcpy(&savectx, &f.rc, sizeof(randctx));
 
-      for (strip = 0; strip < nstrips; strip++) {
+      if (minstrip < 1) {
+         minstrip = 1;
+      }
+
+      if (maxstrip < 0) {
+         maxstrip = nstrips;
+      }
+      
+      // Only one strip is specified to be rendered, change minstrip and maxstrip accordingly
+      if (strip_to_render > 0 ) {
+      
+         if (strip_to_render <= nstrips) {
+         
+            minstrip = strip_to_render;
+            maxstrip = strip_to_render;
+         } else {
+         
+            fprintf(stderr, "Te strip requested to be rendered %d %d is beyond the number of strips. Setting it to last strip\n", strip_to_render, nstrips - 1);
+            minstrip = nstrips;
+            maxstrip = nstrips; 
+         }
+      }
+      
+      for (strip = minstrip-1; strip < maxstrip; strip++) {
          size_t ssoff = (size_t)cps[i].height * strip * cps[i].width * channels * f.bytes_per_channel;
          void *strip_start = image + ssoff;
          cps[i].center[1] = center_base + cps[i].height * (double) strip / (cps[i].pixels_per_unit * zoom_scale);
