@@ -192,8 +192,7 @@ continuous electric sheep genetic crossfades are created like this:
     env inter=test.flam3 frame=10 nframes=20 flam3-genome > inter10.flam3
     env frame=10 flam3-animate < inter10.flam3
 
-see http://flam3.com/flame.pdf for descriptions & formulas, and
-see http://electricsheep.wikispaces.com/Variations for updates.
+see https://flam3.com/flame_draves.pdf for descriptions & formulas, and
 
 The complete list of variations:
 
@@ -296,7 +295,7 @@ The complete list of variations:
   96. auger
   97. flux
   
-see http://flam3.com/flame.pdf for descriptions & formulas for each of
+see https://flam3.com/flame_draves.pdf for descriptions & formulas for each of
 these.  note that, by default, if a random flame is requested and neither
 'use_vars' or 'dont_use_vars' are specified, the following variations are
 not used: noise, blur, gaussian_blur, radial_blur, ngon, square, rays, 
